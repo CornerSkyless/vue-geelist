@@ -950,6 +950,15 @@ export default class App extends Vue {
     columnOptions: [
       { label: "编号", index: "id" },
       {
+        label: "编辑认证",
+        index: "isCertificate"
+      },
+      {
+        label: "编辑认证（bool）",
+        index: "isCertificate",
+        bool: { yText: "已认证", nText: "社区" }
+      },
+      {
         label: "题目标题",
         index: "topic",
         description: "这是这个列的简介",
@@ -964,7 +973,12 @@ export default class App extends Vue {
         wrap: false,
         tooltip: true
       },
-      { label: "上传者", index: "uploader.username" }
+      { label: "上传者", index: "uploader.username" },
+      {
+        label: "空值",
+        index: "uploader.emptyMessage",
+        emptyMessage: "自定义空值"
+      }
     ]
   };
 }

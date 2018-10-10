@@ -55,8 +55,19 @@ export default class Geelist extends Vue {
   private option: GeelistOption;
 
   getContent(row: any, columnOption: GeelistColumnOption): string {
+    if (columnOption.bool) {
+      return IndexByIndex(row, columnOption.index)
+        ? columnOption.bool.yText
+        : columnOption.bool.nText;
+    }
+    if (columnOption.content) {
+      return columnOption.content(row) || this.getEmptyMessage(columnOption);
+    }
     if (columnOption.index) {
-      return IndexByIndex(row, columnOption.index) || "-";
+      return (
+        IndexByIndex(row, columnOption.index) ||
+        this.getEmptyMessage(columnOption)
+      );
     }
   }
 
@@ -66,6 +77,13 @@ export default class Geelist extends Vue {
     } else {
       return this.getContent(row, columnOption);
     }
+  }
+
+  getEmptyMessage(columnOption: GeelistColumnOption): string {
+    if (columnOption.emptyMessage) return columnOption.emptyMessage;
+    else if (this.option.emptyMessage) {
+      return this.option.emptyMessage;
+    } else return "-";
   }
 
   get displayColumns(): GeelistColumnOption[] {
