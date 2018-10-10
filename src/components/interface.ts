@@ -5,6 +5,13 @@ export interface GeelistOption<T> {
     columnOptions:GeelistColumnOption<T>[],
 }
 
+export interface GeelistTagOption {
+    case?:any, // 当值为这个时
+    in?:any[], // 当值在这些里面时
+    text?:string, // 对应的文字
+    type?:string, // 标签类型
+    color?:string // 自定义颜色
+}
 export interface GeelistColumnOption<T> {
     label:string; // 标题
     description?:string; // 列简介
@@ -17,7 +24,8 @@ export interface GeelistColumnOption<T> {
     tooltipText?(row:T):string; // 文字提示内容
     filterText?(row:T):string; // 筛选时所表现的文本内容
     bool?:{
-        yText:string;
-        nText:string;
-    }
+        yText:string; // 为 true 时的值
+        nText:string; // 为 false 时的值
+    },
+    tags?:GeelistTagOption[]
 }

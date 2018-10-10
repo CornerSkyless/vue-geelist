@@ -19,7 +19,12 @@
                         <div slot="content" style="max-width: 350px">{{getToolTipContent(row,column)}}</div>
                         <span>{{getContent(row,column)}}</span>
                     </el-tooltip>
-                    <span v-if="!column.tooltip">{{getContent(row,column)}}</span>
+                    <el-tag v-if="column.tags"
+                            :type="getTagOption(row,column).type"
+                            :color="getTagOption(row,column).color">
+                        {{getContent(row,column)}}
+                    </el-tag>
+                    <span v-if="!column.tooltip && !column.tags">{{getContent(row,column)}}</span>
                 </td>
             </tr>
             </tbody>
@@ -29,7 +34,11 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { GeelistColumnOption, GeelistOption } from "./interface";
+import {
+  GeelistColumnOption,
+  GeelistOption,
+  GeelistTagOption
+} from "./interface";
 
 function IndexByIndex(obj: any, indexes: string): string {
   let levels = indexes.split(".");
@@ -55,6 +64,10 @@ export default class Geelist extends Vue {
   private option: GeelistOption;
 
   getContent(row: any, columnOption: GeelistColumnOption): string {
+    if (columnOption.tags) {
+      const tagOption = this.getTagOption(row, columnOption);
+      if (tagOption && tagOption.text) return tagOption.text;
+    }
     if (columnOption.bool) {
       return IndexByIndex(row, columnOption.index)
         ? columnOption.bool.yText
@@ -69,6 +82,15 @@ export default class Geelist extends Vue {
         this.getEmptyMessage(columnOption)
       );
     }
+  }
+
+  getTagOption(row: any, columnOption: GeelistColumnOption): GeelistTagOption {
+    const ca = IndexByIndex(row, columnOption.index);
+    let tagOption = columnOption.tags.find(
+      tag => tag.case === ca || (tag.in && tag.in.indexOf(ca) >= 0)
+    );
+    if (!tagOption) return columnOption.tags.find(tag => !tag.case && !tag.in);
+    return tagOption;
   }
 
   getToolTipContent(row: any, columnOption: GeelistColumnOption): string {

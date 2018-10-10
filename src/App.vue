@@ -959,6 +959,16 @@ export default class App extends Vue {
         bool: { yText: "已认证", nText: "社区" }
       },
       {
+        label: "编号（tags）",
+        index: "id",
+        tags: [
+          { case: 881, text: "八八一", type: "success" },
+          { in: [874, 872], type: "error" },
+          { in: [870, 869], text: "info", type: "info" },
+          { type: "warning" }
+        ]
+      },
+      {
         label: "题目标题",
         index: "topic",
         description: "这是这个列的简介",
