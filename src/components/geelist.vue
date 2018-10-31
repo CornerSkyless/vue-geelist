@@ -40,7 +40,7 @@ import {
   GeelistTagOption
 } from "./interface";
 
-function IndexByIndex(obj: any, indexes: string): string {
+function IndexByIndex(obj: any, indexes = ""): string {
   let levels = indexes.split(".");
   if (levels.length === 0) return "";
   const index = levels[0];
@@ -59,11 +59,11 @@ function IndexByIndex(obj: any, indexes: string): string {
 })
 export default class Geelist extends Vue {
   @Prop({ required: true, type: Array })
-  private list: any[];
+  private list!: any[];
   @Prop({ required: true, type: Object })
-  private option: GeelistOption;
+  private option!: GeelistOption<any>;
 
-  getContent(row: any, columnOption: GeelistColumnOption): string {
+  getContent(row: any, columnOption: GeelistColumnOption<any>): string {
     if (columnOption.tags) {
       const tagOption = this.getTagOption(row, columnOption);
       if (tagOption && tagOption.text) return tagOption.text;
@@ -82,18 +82,34 @@ export default class Geelist extends Vue {
         this.getEmptyMessage(columnOption)
       );
     }
+    return this.getEmptyMessage(columnOption);
   }
 
-  getTagOption(row: any, columnOption: GeelistColumnOption): GeelistTagOption {
+  /**
+   * 找到当前列对应的标签选项
+   */
+  getTagOption(
+    row: any,
+    columnOption: GeelistColumnOption<any>
+  ): GeelistTagOption {
     const ca = IndexByIndex(row, columnOption.index);
+    if (!columnOption.tags) throw new Error("columnOption.tags is required");
     let tagOption = columnOption.tags.find(
-      tag => tag.case === ca || (tag.in && tag.in.indexOf(ca) >= 0)
+      (tag: GeelistTagOption) =>
+        !!(tag.case === ca) || !!(tag.in && tag.in.includes(ca))
     );
-    if (!tagOption) return columnOption.tags.find(tag => !tag.case && !tag.in);
+    if (!tagOption) {
+      const defaultTagOption = columnOption.tags.find(
+        tag => !tag.case && !tag.in
+      );
+      if (!defaultTagOption)
+        throw new Error("Could not find tag option or default tag option");
+      return defaultTagOption;
+    }
     return tagOption;
   }
 
-  getToolTipContent(row: any, columnOption: GeelistColumnOption): string {
+  getToolTipContent(row: any, columnOption: GeelistColumnOption<any>): string {
     if (columnOption.tooltipText) {
       return columnOption.tooltipText(row);
     } else {
@@ -101,16 +117,16 @@ export default class Geelist extends Vue {
     }
   }
 
-  getEmptyMessage(columnOption: GeelistColumnOption): string {
-    if (columnOption.emptyMessage) return columnOption.emptyMessage;
-    else if (this.option.emptyMessage) {
-      return this.option.emptyMessage;
+  getEmptyMessage(columnOption: GeelistColumnOption<any>): string {
+    if (columnOption.emptyText) return columnOption.emptyText;
+    else if (this.option.emptyText) {
+      return this.option.emptyText;
     } else return "-";
   }
 
-  get displayColumns(): GeelistColumnOption[] {
-    return this.option.columnOptions.map(co => {
-      const style: any = co.style;
+  get displayColumns(): GeelistColumnOption<any>[] {
+    return this.option.columnOptions.map((co: GeelistColumnOption<any>) => {
+      const style: any = co.style || {};
       if (co.wrap) {
         style["text-overflow"] = "inherit";
         style["overflow"] = "auto";

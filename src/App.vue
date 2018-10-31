@@ -1,6 +1,6 @@
 <template>
     <div id="app">
-        <geelist :list="list" :option="option"/>
+        <geelist :list="list" :option="option"></geelist>
     </div>
 </template>
 
@@ -981,13 +981,13 @@ export default class App extends Vue {
         label: "题目简介",
         index: "description",
         wrap: false,
-        tooltip: true
+        tooltip: false
       },
       { label: "上传者", index: "uploader.username" },
       {
         label: "空值",
         index: "uploader.emptyMessage",
-        emptyMessage: "自定义空值"
+        emptyText: "自定义空值"
       }
     ]
   };
