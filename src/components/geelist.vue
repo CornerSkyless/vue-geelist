@@ -1,6 +1,9 @@
 <template>
     <div>
-        <table class="geeList">
+        <div class="geelist-header">
+          <el-input size="mini" style="width:250px" placeholder="输入关键词搜索"></el-input>
+        </div>
+        <table class="geelist-table">
             <thead>
             <tr>
                 <th v-for="column in displayColumns" :key="column.label" :style="column.style">
@@ -177,6 +180,10 @@ export default class Geelist extends Vue {
     });
   }
 
+  get filterList(): any[] {
+    return [];
+  }
+
   get displayList(): any[] {
     return this.list;
   }
@@ -188,7 +195,7 @@ export default class Geelist extends Vue {
   color: #409eff;
 }
 
-.geeListTopArea {
+.geelist-header {
   border: 1px solid #dcdfe6;
   border-bottom: 0;
   background: #ebeef5;
@@ -205,7 +212,7 @@ export default class Geelist extends Vue {
   }
 }
 
-.geeList {
+.geelist-table {
   border-collapse: collapse;
   border-spacing: 0;
   border: 1px solid #dcdfe6 !important;

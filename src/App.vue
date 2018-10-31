@@ -1012,7 +1012,9 @@ export default class App extends Vue {
             size: "mini"
           },
           {
-            text: "加认证",
+            text(row) {
+              return row.isCertificate ? "已认证" : "加认证";
+            },
             type: "text",
             handler(row) {
               row.isCertificate = true;
