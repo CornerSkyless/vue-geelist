@@ -1,6 +1,6 @@
 <template>
     <div id="app">
-        <geelist :list="list" :option="option">
+        <geelist :list="list" :option="option" @message="message">
           <template slot-scope="scope" slot="avatar">
               <img :src="scope.row.uploader.avatarUrl" style="width:20px;height:20px">
           </template>
@@ -952,19 +952,19 @@ export default class App extends Vue {
   option: GeelistOption<any> = {
     rowKey: "id",
     columnOptions: [
-      { label: "编号", index: "id" },
+      { label: "编号", content: "id" },
       {
         label: "编辑认证",
-        index: "isCertificate"
+        content: "isCertificate"
       },
       {
         label: "编辑认证（bool）",
-        index: "isCertificate",
+        content: "isCertificate",
         bool: { yText: "已认证", nText: "社区" }
       },
       {
         label: "编号（tags）",
-        index: "id",
+        content: "id",
         tags: [
           { case: 881, text: "八八一", type: "success" },
           { in: [874, 872], type: "error" },
@@ -974,7 +974,7 @@ export default class App extends Vue {
       },
       {
         label: "题目标题",
-        index: "topic",
+        content: "topic",
         description: "这是这个列的简介",
         tooltip: true,
         tooltipText(row) {
@@ -983,24 +983,51 @@ export default class App extends Vue {
       },
       {
         label: "题目简介",
-        index: "description",
+        content: "description",
         wrap: false,
         tooltip: false
       },
-      { label: "上传者", index: "uploader.username" },
+      { label: "上传者", content: "uploader.username" },
       {
         label: "空值",
-        index: "uploader.emptyMessage",
+        content: "uploader.emptyMessage",
         emptyText: "自定义空值"
       },
       {
         label: "头像",
         description: "这是插槽的使用方法",
-        index: "uploader.avatarUrl",
-        slot: "avatar"
+        content: "uploader.avatarUrl",
+        slot: "avatar",
+        style: {
+          width: "40px"
+        }
+      },
+      {
+        label: "操作",
+        actions: [
+          {
+            text: "编辑",
+            handler: "message",
+            plain: true,
+            size: "mini"
+          },
+          {
+            text: "加认证",
+            type: "text",
+            handler(row) {
+              row.isCertificate = true;
+            },
+            disabled(row) {
+              return row.isCertificate;
+            }
+          }
+        ]
       }
     ]
   };
+  message(row: any) {
+    this.$message("点击了: " + row.id);
+  }
 }
 </script>
 

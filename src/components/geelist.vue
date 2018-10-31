@@ -3,7 +3,7 @@
         <table class="geeList">
             <thead>
             <tr>
-                <th v-for="column in displayColumns" :key="column.label">
+                <th v-for="column in displayColumns" :key="column.label" :style="column.style">
                     {{column.label}}
                     <el-tooltip v-if="column.description"
                                 effect="dark" placement="bottom" :content="column.description">
@@ -25,7 +25,15 @@
                         {{getContent(row,column)}}
                     </el-tag>
                     <slot v-if="column.slot" :name="column.slot" :row="row"></slot>
-                    <span v-if="!column.tooltip && !column.tags && !column.slot">{{getContent(row,column)}}</span>
+                    <el-button v-for="action in column.actions || []"
+                      :key="getActionXXX(row,action,'text')" 
+                      :type="getActionXXX(row,action,'type')"
+                      :plain="getActionXXX(row,action,'plain')"
+                      :circle="getActionXXX(row,action,'circle')"
+                      :disabled="getActionXXX(row,action,'disabled')" 
+                      :size="getActionXXX(row,action,'size')" 
+                      @click="doAction(row,action)">{{getActionXXX(row,action,'text')}}</el-button>
+                    <span v-if="!column.tooltip && !column.tags && !column.slot && !column.actions">{{getContent(row,column)}}</span>
                 </td>
             </tr>
             </tbody>
@@ -34,14 +42,15 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import {
   GeelistColumnOption,
   GeelistOption,
-  GeelistTagOption
+  GeelistTagOption,
+  GeelistActionOption
 } from "./interface";
 
-function IndexByIndex(obj: any, indexes = ""): string {
+function IndexByIndex(obj: any, indexes = ""): string | boolean {
   let levels = indexes.split(".");
   if (levels.length === 0) return "";
   const index = levels[0];
@@ -64,26 +73,53 @@ export default class Geelist extends Vue {
   @Prop({ required: true, type: Object })
   private option!: GeelistOption<any>;
 
-  getContent(row: any, columnOption: GeelistColumnOption<any>): string {
+  @Watch("list", {
+    deep: true
+  })
+  listHandler(newList: any[]) {
+    this.list = newList;
+  }
+
+  getRawContent(
+    row: any,
+    columnOption: GeelistColumnOption<any>
+  ): string | boolean {
+    if (typeof columnOption.content === "string") {
+      if (IndexByIndex(row, columnOption.content) === false) return false;
+      return (
+        IndexByIndex(row, columnOption.content) ||
+        this.getEmptyMessage(columnOption)
+      );
+    }
+    if (typeof columnOption.content === "function")
+      return columnOption.content(row);
+    return "";
+  }
+
+  getActionXXX(row: any, actionOption: any, XXX: string): string {
+    if (typeof actionOption[XXX] === "function") return actionOption[XXX](row);
+    else return actionOption[XXX];
+  }
+
+  doAction(row: any, actionOption: GeelistActionOption<any>) {
+    if (typeof actionOption.handler === "function") actionOption.handler(row);
+    else this.$emit(actionOption.handler, row);
+  }
+
+  getContent(
+    row: any,
+    columnOption: GeelistColumnOption<any>
+  ): string | boolean {
+    const rawContent = this.getRawContent(row, columnOption);
     if (columnOption.tags) {
       const tagOption = this.getTagOption(row, columnOption);
       if (tagOption && tagOption.text) return tagOption.text;
     }
     if (columnOption.bool) {
-      return IndexByIndex(row, columnOption.index)
-        ? columnOption.bool.yText
-        : columnOption.bool.nText;
+      return rawContent ? columnOption.bool.yText : columnOption.bool.nText;
     }
-    if (columnOption.content) {
-      return columnOption.content(row) || this.getEmptyMessage(columnOption);
-    }
-    if (columnOption.index) {
-      return (
-        IndexByIndex(row, columnOption.index) ||
-        this.getEmptyMessage(columnOption)
-      );
-    }
-    return this.getEmptyMessage(columnOption);
+    if (rawContent === false) return false;
+    return rawContent || this.getEmptyMessage(columnOption);
   }
 
   /**
@@ -93,11 +129,11 @@ export default class Geelist extends Vue {
     row: any,
     columnOption: GeelistColumnOption<any>
   ): GeelistTagOption {
-    const ca = IndexByIndex(row, columnOption.index);
     if (!columnOption.tags) throw new Error("columnOption.tags is required");
+    const rawContent = this.getRawContent(row, columnOption);
     let tagOption = columnOption.tags.find(
       (tag: GeelistTagOption) =>
-        !!(tag.case === ca) || !!(tag.in && tag.in.includes(ca))
+        !!(tag.case === rawContent) || !!(tag.in && tag.in.includes(rawContent))
     );
     if (!tagOption) {
       const defaultTagOption = columnOption.tags.find(
@@ -110,7 +146,10 @@ export default class Geelist extends Vue {
     return tagOption;
   }
 
-  getToolTipContent(row: any, columnOption: GeelistColumnOption<any>): string {
+  getToolTipContent(
+    row: any,
+    columnOption: GeelistColumnOption<any>
+  ): string | boolean {
     if (columnOption.tooltipText) {
       return columnOption.tooltipText(row);
     } else {
