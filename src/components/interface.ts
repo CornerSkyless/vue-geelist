@@ -12,12 +12,14 @@ export interface GeelistTagOption {
     type?: string, // 标签类型
     color?: string // 自定义颜色
 }
+
 export interface GeelistColumnOption<T> {
     label: string; // 标题
     description?: string; // 列简介
     index?: string; // 索引
     content?(row: T): string; // 自定义文字内容
-    style?: any;
+    style?: any; // 默认样式
+    slot?: string;
     wrap?: boolean; // 强制换行
     tooltip?: boolean; // 文字提示
     emptyText?: string; // 空值提示

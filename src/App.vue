@@ -1,6 +1,10 @@
 <template>
     <div id="app">
-        <geelist :list="list" :option="option"></geelist>
+        <geelist :list="list" :option="option">
+          <template slot-scope="scope" slot="avatar">
+              <img :src="scope.row.uploader.avatarUrl" style="width:20px;height:20px">
+          </template>
+        </geelist>
     </div>
 </template>
 
@@ -988,6 +992,12 @@ export default class App extends Vue {
         label: "空值",
         index: "uploader.emptyMessage",
         emptyText: "自定义空值"
+      },
+      {
+        label: "头像",
+        description: "这是插槽的使用方法",
+        index: "uploader.avatarUrl",
+        slot: "avatar"
       }
     ]
   };

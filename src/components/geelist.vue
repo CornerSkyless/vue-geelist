@@ -24,7 +24,8 @@
                             :color="getTagOption(row,column).color">
                         {{getContent(row,column)}}
                     </el-tag>
-                    <span v-if="!column.tooltip && !column.tags">{{getContent(row,column)}}</span>
+                    <slot v-if="column.slot" :name="column.slot" :row="row"></slot>
+                    <span v-if="!column.tooltip && !column.tags && !column.slot">{{getContent(row,column)}}</span>
                 </td>
             </tr>
             </tbody>
