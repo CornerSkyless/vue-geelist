@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="geelist-header">
-          <el-input size="mini" style="width:250px" placeholder="输入关键词搜索"></el-input>
+          <el-input size="mini" style="width:250px" v-model="searchParams.keyword" placeholder="输入关键词搜索"></el-input>
         </div>
         <table class="geelist-table">
             <thead>
@@ -41,6 +41,16 @@
             </tr>
             </tbody>
         </table>
+        <div style="margin:10px;text-align:center">
+          <el-pagination
+            background
+            :current-page.sync="searchParams.currentPage"
+            :page-sizes="[5, 10, 20, 50]"
+            :page-size.sync="searchParams.pageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="filterList.length">
+          </el-pagination>
+        </div>
     </div>
 </template>
 
@@ -76,6 +86,12 @@ export default class Geelist extends Vue {
   @Prop({ required: true, type: Object })
   private option!: GeelistOption<any>;
 
+  searchParams = {
+    keyword: "",
+    currentPage: 1,
+    pageSize: this.option.pageSize || 10
+  };
+
   @Watch("list", {
     deep: true
   })
@@ -83,10 +99,11 @@ export default class Geelist extends Vue {
     this.list = newList;
   }
 
+  // 获取原始字段值
   getRawContent(
     row: any,
     columnOption: GeelistColumnOption<any>
-  ): string | boolean {
+  ): string | boolean | number {
     if (typeof columnOption.content === "string") {
       if (IndexByIndex(row, columnOption.content) === false) return false;
       return (
@@ -109,10 +126,8 @@ export default class Geelist extends Vue {
     else this.$emit(actionOption.handler, row);
   }
 
-  getContent(
-    row: any,
-    columnOption: GeelistColumnOption<any>
-  ): string | boolean {
+  // 获取展示的字段内容
+  getContent(row: any, columnOption: GeelistColumnOption<any>): string {
     const rawContent = this.getRawContent(row, columnOption);
     if (columnOption.tags) {
       const tagOption = this.getTagOption(row, columnOption);
@@ -121,7 +136,9 @@ export default class Geelist extends Vue {
     if (columnOption.bool) {
       return rawContent ? columnOption.bool.yText : columnOption.bool.nText;
     }
-    if (rawContent === false) return false;
+    if (rawContent === false) return "false";
+    if (rawContent === true) return "true";
+    if (typeof rawContent === "number") return rawContent.toFixed();
     return rawContent || this.getEmptyMessage(columnOption);
   }
 
@@ -181,11 +198,29 @@ export default class Geelist extends Vue {
   }
 
   get filterList(): any[] {
-    return [];
+    return this.list.filter(row => {
+      const keyword = this.searchParams.keyword.trim();
+      let keywordFound = false;
+      for (const column of this.displayColumns) {
+        if (keyword && !keywordFound) {
+          try {
+            if (this.getContent(row, column).includes(keyword))
+              keywordFound = true;
+          } catch (e) {
+            console.log(this.getContent(row, column));
+          }
+        }
+      }
+      if (keyword && !keywordFound) return false;
+      return true;
+    });
   }
 
   get displayList(): any[] {
-    return this.list;
+    const start =
+      (this.searchParams.currentPage - 1) * this.searchParams.pageSize;
+    const end = start + this.searchParams.pageSize;
+    return this.filterList.slice(start, end);
   }
 }
 </script>
