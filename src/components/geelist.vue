@@ -155,13 +155,6 @@ export default class Geelist extends Vue {
     pageSize: this.option.pageSize || 10
   };
 
-  @Watch("list", {
-    deep: true
-  })
-  listHandler(newList: any[]) {
-    this.list = newList;
-  }
-
   // 获取原始字段值
   getRawContent(
     row: any,
