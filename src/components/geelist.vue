@@ -1,12 +1,17 @@
 <template>
   <div>
     <div class="geelist-header">
-      <el-input
-        size="mini"
-        style="width:250px"
-        v-model="searchParams.keyword"
-        placeholder="输入关键词搜索"
-      ></el-input>
+      <div>
+        <el-input
+          size="mini"
+          style="width:250px"
+          v-model="searchParams.keyword"
+          placeholder="输入关键词搜索"
+        ></el-input>
+      </div>
+      <div v-if="option.exportExcel">
+        <el-button size="mini" @click="exportCsv">导出 Excel</el-button>
+      </div>
     </div>
     <table class="geelist-table">
       <thead>
@@ -118,7 +123,7 @@ import {
   GeelistActionOption,
   GeelistFilterColumn
 } from "./interface";
-
+const CsvExportor = require("csv-exportor");
 function IndexByIndex(obj: any, indexes = ""): string | boolean {
   let levels = indexes.split(".");
   if (levels.length === 0) return "";
@@ -240,6 +245,23 @@ export default class Geelist extends Vue {
     else if (this.option.emptyText) {
       return this.option.emptyText;
     } else return "-";
+  }
+
+  exportCsv() {
+    const header = this.option.columnOptions.map(column => column.label);
+    const tableData: string[][] = [];
+    for (const row of this.list) {
+      const data = [];
+      for (const column of this.option.columnOptions) {
+        data.push(this.getContent(row, column));
+      }
+      tableData.push(data);
+    }
+    CsvExportor.downloadCsv(
+      tableData,
+      { header },
+      this.option.exportExcel + ".csv"
+    );
   }
 
   get displayColumns(): GeelistColumnOption<any>[] {
