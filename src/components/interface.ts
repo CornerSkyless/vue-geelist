@@ -42,4 +42,13 @@ export interface GeelistColumnOption<T> {
     };
     tags?: GeelistTagOption[];
     actions?: GeelistActionOption<T>[];
+    input?: boolean;
+    select?: boolean;
+}
+type GeelistFilterColumnType = 'None' | 'Input' | 'Select'
+export interface GeelistFilterColumn {
+    type: GeelistFilterColumnType;
+    value: string;
+    values: string[];
+    selectOptions: string[]
 }

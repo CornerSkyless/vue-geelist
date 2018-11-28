@@ -1,11 +1,11 @@
 <template>
-    <div id="app">
-        <geelist :list="list" :option="option" @message="message">
-          <template slot-scope="scope" slot="avatar">
-              <img :src="scope.row.uploader.avatarUrl" style="width:20px;height:20px">
-          </template>
-        </geelist>
-    </div>
+  <div id="app">
+    <geelist :list="list" :option="option" @message="message">
+      <template slot-scope="scope" slot="avatar">
+        <img :src="scope.row.uploader.avatarUrl" style="width:20px;height:20px">
+      </template>
+    </geelist>
+  </div>
 </template>
 
 <script lang="ts">
@@ -951,17 +951,19 @@ export default class App extends Vue {
   ];
   option: GeelistOption<any> = {
     rowKey: "id",
-    pageSize: 5,
+    pageSize: 10,
     columnOptions: [
-      { label: "编号", content: "id" },
+      { label: "编号", content: "id", input: true },
       {
         label: "编辑认证",
-        content: "isCertificate"
+        content: "isCertificate",
+        select: true
       },
       {
         label: "编辑认证（bool）",
         content: "isCertificate",
-        bool: { yText: "已认证", nText: "社区" }
+        bool: { yText: "已认证", nText: "社区" },
+        select: true
       },
       {
         label: "编号（tags）",
@@ -971,7 +973,8 @@ export default class App extends Vue {
           { in: [874, 872], type: "error" },
           { in: [870, 869], text: "info", type: "info" },
           { type: "warning" }
-        ]
+        ],
+        select: true
       },
       {
         label: "题目标题",
@@ -980,15 +983,17 @@ export default class App extends Vue {
         tooltip: true,
         tooltipText(row) {
           return "tooltipText " + row.id;
-        }
+        },
+        input: true
       },
       {
         label: "题目简介",
         content: "description",
         wrap: false,
-        tooltip: false
+        tooltip: false,
+        input: true
       },
-      { label: "上传者", content: "uploader.username" },
+      { label: "上传者", content: "uploader.username", input: true },
       {
         label: "空值",
         content: "uploader.emptyMessage",

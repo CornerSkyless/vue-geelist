@@ -1,57 +1,112 @@
 <template>
-    <div>
-        <div class="geelist-header">
-          <el-input size="mini" style="width:250px" v-model="searchParams.keyword" placeholder="输入关键词搜索"></el-input>
-        </div>
-        <table class="geelist-table">
-            <thead>
-            <tr>
-                <th v-for="column in displayColumns" :key="column.label" :style="column.style">
-                    {{column.label}}
-                    <el-tooltip v-if="column.description"
-                                effect="dark" placement="bottom" :content="column.description">
-                        <i class="el-icon-question"></i>
-                    </el-tooltip>
-                </th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-for="row in displayList" :key="row[option.rowKey]">
-                <td v-for="column in displayColumns" :key="column.label" :style="column.style">
-                    <el-tooltip effect="dark" placement="bottom-start" v-if="column.tooltip">
-                        <div slot="content" style="max-width: 350px">{{getToolTipContent(row,column)}}</div>
-                        <span>{{getContent(row,column)}}</span>
-                    </el-tooltip>
-                    <el-tag v-if="column.tags"
-                            :type="getTagOption(row,column).type"
-                            :color="getTagOption(row,column).color">
-                        {{getContent(row,column)}}
-                    </el-tag>
-                    <slot v-if="column.slot" :name="column.slot" :row="row"></slot>
-                    <el-button v-for="action in column.actions || []"
-                      :key="getActionXXX(row,action,'text')" 
-                      :type="getActionXXX(row,action,'type')"
-                      :plain="getActionXXX(row,action,'plain')"
-                      :circle="getActionXXX(row,action,'circle')"
-                      :disabled="getActionXXX(row,action,'disabled')" 
-                      :size="getActionXXX(row,action,'size')" 
-                      @click="doAction(row,action)">{{getActionXXX(row,action,'text')}}</el-button>
-                    <span v-if="!column.tooltip && !column.tags && !column.slot && !column.actions">{{getContent(row,column)}}</span>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-        <div style="margin:10px;text-align:center">
-          <el-pagination
-            background
-            :current-page.sync="searchParams.currentPage"
-            :page-sizes="[5, 10, 20, 50]"
-            :page-size.sync="searchParams.pageSize"
-            layout="total, sizes, prev, pager, next, jumper"
-            :total="filterList.length">
-          </el-pagination>
-        </div>
+  <div>
+    <div class="geelist-header">
+      <el-input
+        size="mini"
+        style="width:250px"
+        v-model="searchParams.keyword"
+        placeholder="输入关键词搜索"
+      ></el-input>
     </div>
+    <table class="geelist-table">
+      <thead>
+        <tr>
+          <th
+            v-for="(column,i) in displayColumns"
+            :key="column.label"
+            :style="column.style"
+            :rowspan="filterColunmList[i].type==='None' ? 2 : 1"
+          >
+            {{column.label}}
+            <el-tooltip
+              v-if="column.description"
+              effect="dark"
+              placement="bottom"
+              :content="column.description"
+            >
+              <i class="el-icon-question"></i>
+            </el-tooltip>
+          </th>
+        </tr>
+        <tr>
+          <th
+            v-for="(column,i) in displayColumns"
+            v-if="filterColunmList[i].type!=='None'"
+            :key="column.label"
+          >
+            <el-input
+              size="mini"
+              v-if="filterColunmList[i].type==='Input'"
+              v-model="filterColunmList[i].value"
+              placeholder="检索"
+            ></el-input>
+            <el-popover
+              v-if="filterColunmList[i].type==='Select'"
+              placement="bottom"
+              width="240"
+              trigger="click"
+            >
+              <el-checkbox-group v-model="filterColunmList[i].values">
+                <el-checkbox
+                  v-for="option in filterColunmList[i].selectOptions"
+                  :key="option"
+                  :label="option"
+                  style="margin-left:0;margin-right:15px"
+                ></el-checkbox>
+              </el-checkbox-group>
+              <a
+                slot="reference"
+                class="select-span"
+                :class="{'text-blue':filterColunmList[i].values.length>0}"
+              >
+                <i class="el-icon-caret-bottom"></i>
+                筛选
+              </a>
+            </el-popover>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="row in displayList" :key="row[option.rowKey]">
+          <td v-for="column in displayColumns" :key="column.label" :style="column.style">
+            <el-tooltip effect="dark" placement="bottom-start" v-if="column.tooltip">
+              <div slot="content" style="max-width: 350px">{{getToolTipContent(row,column)}}</div>
+              <span>{{getContent(row,column)}}</span>
+            </el-tooltip>
+            <el-tag
+              v-if="column.tags"
+              :type="getTagOption(row,column).type"
+              :color="getTagOption(row,column).color"
+            >{{getContent(row,column)}}</el-tag>
+            <slot v-if="column.slot" :name="column.slot" :row="row"></slot>
+            <el-button
+              v-for="action in column.actions || []"
+              :key="getActionXXX(row,action,'text')"
+              :type="getActionXXX(row,action,'type')"
+              :plain="getActionXXX(row,action,'plain')"
+              :circle="getActionXXX(row,action,'circle')"
+              :disabled="getActionXXX(row,action,'disabled')"
+              :size="getActionXXX(row,action,'size')"
+              @click="doAction(row,action)"
+            >{{getActionXXX(row,action,'text')}}</el-button>
+            <span
+              v-if="!column.tooltip && !column.tags && !column.slot && !column.actions"
+            >{{getContent(row,column)}}</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="margin:10px;text-align:center">
+      <el-pagination
+        background
+        :current-page.sync="searchParams.currentPage"
+        :page-sizes="[5, 10, 20, 50]"
+        :page-size.sync="searchParams.pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="filterList.length"
+      ></el-pagination>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -60,7 +115,8 @@ import {
   GeelistColumnOption,
   GeelistOption,
   GeelistTagOption,
-  GeelistActionOption
+  GeelistActionOption,
+  GeelistFilterColumn
 } from "./interface";
 
 function IndexByIndex(obj: any, indexes = ""): string | boolean {
@@ -85,6 +141,8 @@ export default class Geelist extends Vue {
   private list!: any[];
   @Prop({ required: true, type: Object })
   private option!: GeelistOption<any>;
+
+  private filterColunmList: GeelistFilterColumn[] = [];
 
   searchParams = {
     keyword: "",
@@ -198,22 +256,41 @@ export default class Geelist extends Vue {
   }
 
   get filterList(): any[] {
-    return this.list.filter(row => {
-      const keyword = this.searchParams.keyword.trim();
-      let keywordFound = false;
-      for (const column of this.displayColumns) {
-        if (keyword && !keywordFound) {
-          try {
-            if (this.getContent(row, column).includes(keyword))
-              keywordFound = true;
-          } catch (e) {
-            console.log(this.getContent(row, column));
+    return this.list
+      .filter(row => {
+        const keyword = this.searchParams.keyword.trim();
+        let keywordFound = false;
+        for (const column of this.displayColumns) {
+          if (keyword && !keywordFound) {
+            try {
+              if (this.getContent(row, column).includes(keyword))
+                keywordFound = true;
+            } catch (e) {
+              console.log(this.getContent(row, column));
+            }
           }
         }
-      }
-      if (keyword && !keywordFound) return false;
-      return true;
-    });
+        if (keyword && !keywordFound) return false;
+        return true;
+      })
+      .filter(row => {
+        for (let i = 0; i < this.displayColumns.length; i++) {
+          const filterColunm = this.filterColunmList[i];
+          const colunm = this.displayColumns[i];
+          if (filterColunm.type === "Input" && filterColunm.value) {
+            if (!this.getContent(row, colunm).includes(filterColunm.value))
+              return false;
+          }
+          if (
+            filterColunm.type === "Select" &&
+            filterColunm.values.length > 0
+          ) {
+            if (!filterColunm.values.includes(this.getContent(row, colunm)))
+              return false;
+          }
+        }
+        return true;
+      });
   }
 
   get displayList(): any[] {
@@ -222,18 +299,56 @@ export default class Geelist extends Vue {
     const end = start + this.searchParams.pageSize;
     return this.filterList.slice(start, end);
   }
+
+  created() {
+    this.filterColunmList = this.option.columnOptions.map(
+      (column): GeelistFilterColumn => {
+        if (column.input)
+          return {
+            type: "Input",
+            value: "",
+            values: [],
+            selectOptions: []
+          };
+        if (column.select) {
+          const selectOptions: string[] = [];
+          this.list.forEach(row => {
+            const content = this.getContent(row, column);
+            if (!selectOptions.includes(content)) selectOptions.push(content);
+          });
+          return {
+            type: "Select",
+            value: "",
+            values: [],
+            selectOptions
+          };
+        }
+        return {
+          type: "None",
+          value: "",
+          values: [],
+          selectOptions: []
+        };
+      }
+    );
+  }
 }
 </script>
 
 <style lang="scss">
 .text-blue {
   color: #409eff;
+  user-select: none;
+}
+.select-span {
+  cursor: pointer;
+  user-select: none;
 }
 
 .geelist-header {
-  border: 1px solid #dcdfe6;
+  border: 1px solid #e8e8e8;
   border-bottom: 0;
-  background: #ebeef5;
+  background: #fafafa;
   color: #909399;
   padding: 10px;
   font-size: 12px;
@@ -241,21 +356,26 @@ export default class Geelist extends Vue {
   justify-content: space-between;
   align-items: center;
   .el-input__inner {
-    border: 0;
     height: 30px;
     font-size: 12px;
+    border: 1px solid #e8e8e8;
   }
 }
 
 .geelist-table {
   border-collapse: collapse;
   border-spacing: 0;
-  border: 1px solid #dcdfe6 !important;
+  border: 1px solid #e8e8e8 !important;
   background: #f1f3f5;
   thead {
     width: 100%;
     table-layout: fixed;
     display: table;
+    tr:nth-child(1) {
+      th {
+        border-top: 0;
+      }
+    }
     th:nth-child(1) {
       border-left: 0;
     }
@@ -266,19 +386,28 @@ export default class Geelist extends Vue {
       text-align: center;
       font-size: 12px;
       padding: 8px 5px;
-      border: 1px solid #dcdfe6;
-      background: #ebeef5;
-      color: #909399;
+      border: 1px solid #e8e8e8;
+      background: #fafafa;
+      color: rgba(0, 0, 0, 0.5);
+      .el-input__inner {
+        border: 1px solid #e8e8e8;
+      }
+      label {
+        margin-left: 0 !important;
+      }
     }
   }
   tbody {
     overflow-y: scroll;
+    tr:nth-child(-1) {
+      border-bottom: 0;
+    }
     tr {
       display: table;
       width: 100%;
       table-layout: fixed;
       td {
-        border: 1px solid #ebeef5;
+        border: 1px solid #e8e8e8;
         border-top: 0;
         color: #303133;
         padding: 5px;
@@ -292,6 +421,9 @@ export default class Geelist extends Vue {
           line-height: 18px;
           height: 20px;
         }
+      }
+      td:nth-child(1) {
+        border-left: 0;
       }
       .actions-cell {
         padding: 0;
