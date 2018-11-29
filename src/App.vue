@@ -1035,7 +1035,7 @@ export default class App extends Vue {
     ]
   };
   message(row: any) {
-    this.$message("点击了: " + row.id);
+    alert("点击了: " + row.id);
   }
 }
 </script>
