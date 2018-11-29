@@ -994,7 +994,7 @@ export default class App extends Vue {
         tooltip: false,
         input: true
       },
-      { label: "上传者", content: "uploader.username", input: true },
+      { label: "上传者", content: "uploader.username", select: true },
       {
         label: "空值",
         content: "uploader.emptyMessage",

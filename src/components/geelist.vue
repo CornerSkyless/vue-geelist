@@ -155,6 +155,16 @@ export default class Geelist extends Vue {
     pageSize: this.option.pageSize || 10
   };
 
+  @Watch("option", { deep: true })
+  optionHandler() {
+    this.initOption();
+  }
+
+  @Watch("list", { deep: true })
+  listHandler() {
+    this.initOption();
+  }
+
   // 获取原始字段值
   getRawContent(
     row: any,
@@ -315,7 +325,7 @@ export default class Geelist extends Vue {
     return this.filterList.slice(start, end);
   }
 
-  created() {
+  initOption() {
     this.filterColunmList = this.option.columnOptions.map(
       (column): GeelistFilterColumn => {
         if (column.input)
@@ -346,6 +356,10 @@ export default class Geelist extends Vue {
         };
       }
     );
+  }
+
+  created() {
+    this.initOption();
   }
 }
 </script>
