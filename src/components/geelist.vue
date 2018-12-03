@@ -251,12 +251,15 @@ export default class Geelist extends Vue {
   }
 
   exportCsv() {
-    const header = this.option.columnOptions.map(column => column.label);
+    const header = [];
+    for (const column of this.option.columnOptions) {
+      if (!column.actions) header.push(column.label);
+    }
     const tableData: string[][] = [];
     for (const row of this.list) {
       const data = [];
       for (const column of this.option.columnOptions) {
-        data.push(this.getContent(row, column));
+        if (!column.actions) data.push(this.getContent(row, column));
       }
       tableData.push(data);
     }
