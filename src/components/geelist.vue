@@ -34,11 +34,7 @@
           </th>
         </tr>
         <tr>
-          <th
-            v-for="(column,i) in displayColumns"
-            v-if="filterColunmList[i].type!=='None'"
-            :key="column.label"
-          >
+          <th v-for="(column,i) in displayFilterThList" :key="column.label">
             <el-input
               size="mini"
               v-if="filterColunmList[i].type==='Input'"
@@ -101,7 +97,7 @@
         </tr>
       </tbody>
     </table>
-    <div style="margin:10px;text-align:center">
+    <div style="margin:10px;text-align:center" v-if="!option.disablePagination">
       <el-pagination
         background
         :current-page.sync="searchParams.currentPage"
@@ -322,10 +318,18 @@ export default class Geelist extends Vue {
   }
 
   get displayList(): any[] {
+    if (this.option.disablePagination) return this.filterList;
+
     const start =
       (this.searchParams.currentPage - 1) * this.searchParams.pageSize;
     const end = start + this.searchParams.pageSize;
     return this.filterList.slice(start, end);
+  }
+
+  get displayFilterThList(): any[] {
+    return this.displayColumns.filter((column, i) => {
+      return this.filterColunmList[i].type !== "None";
+    });
   }
 
   initOption() {

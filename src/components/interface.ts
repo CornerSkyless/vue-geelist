@@ -5,6 +5,7 @@ export interface GeelistOption<T> {
   pageSize?: number;
   columnOptions: GeelistColumnOption<T>[];
   exportExcel?: string;
+  disablePagination?: boolean;
 }
 
 export interface GeelistTagOption {

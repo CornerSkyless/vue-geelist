@@ -6,7 +6,9 @@ import {
   Input,
   Checkbox,
   CheckboxGroup,
-  Popover
+  Popover,
+  Tag,
+  Pagination
 } from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
 const GL = {
@@ -18,6 +20,8 @@ const GL = {
     Vue.use(Checkbox);
     Vue.use(CheckboxGroup);
     Vue.use(Popover);
+    Vue.use(Tag);
+    Vue.use(Pagination);
   }
 };
 export default GL;
