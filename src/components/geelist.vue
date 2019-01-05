@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="geelist-component">
     <div class="geelist-header">
       <div>
         <el-input
@@ -372,6 +372,16 @@ export default class Geelist extends Vue {
 </script>
 
 <style lang="scss">
+.geelist-component {
+  table {
+    margin: 0 !important;
+  }
+  th,
+  tr {
+    border: 0 !important;
+  }
+}
+
 .text-blue {
   color: #409eff;
   user-select: none;
