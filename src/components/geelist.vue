@@ -101,7 +101,7 @@
       <el-pagination
         background
         :current-page.sync="searchParams.currentPage"
-        :page-sizes="[5, 10, 20, 50]"
+        :page-sizes="this.option.pageSizes || [5, 10, 20, 50]"
         :page-size.sync="searchParams.pageSize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="filterList.length"
@@ -419,20 +419,20 @@ export default class Geelist extends Vue {
     display: table;
     tr:nth-child(1) {
       th {
-        border-top: 0;
+        border-top: 0 !important;
       }
     }
     th:nth-child(1) {
-      border-left: 0;
+      border-left: 0 !important;
     }
     th:nth-child(-1) {
-      border-right: 0;
+      border-right: 0 !important;
     }
     th {
       text-align: center;
       font-size: 12px;
       padding: 8px 5px;
-      border: 1px solid #e8e8e8;
+      border: 1px solid #e8e8e8 !important;
       background: #fafafa;
       color: rgba(0, 0, 0, 0.5);
       .el-input__inner {

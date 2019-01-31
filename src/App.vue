@@ -951,7 +951,8 @@ export default class App extends Vue {
   ];
   option: GeelistOption<any> = {
     rowKey: "id",
-    pageSize: 10,
+    pageSize: 100,
+    pageSizes: [5, 10, 20, 100],
     exportExcel: "data",
     columnOptions: [
       { label: "编号", content: "id", input: true },

@@ -3,6 +3,7 @@ export interface GeelistOption<T> {
   showColumnFilter?: boolean;
   emptyText?: string;
   pageSize?: number;
+  pageSizes?: number[];
   columnOptions: GeelistColumnOption<T>[];
   exportExcel?: string;
   disablePagination?: boolean;
