@@ -125,6 +125,7 @@ function IndexByIndex(obj: any, indexes = ""): string | boolean {
   if (levels.length === 0) return "";
   const index = levels[0];
   levels.splice(0, 1);
+  if (!obj) return "";
   if (!obj.hasOwnProperty(index)) return "";
   else if (levels.length === 0) return obj[index];
   else {
