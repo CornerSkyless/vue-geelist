@@ -7,6 +7,7 @@ export interface GeelistOption<T> {
   columnOptions: GeelistColumnOption<T>[];
   exportExcel?: string;
   disablePagination?: boolean;
+  checkbox?:boolean;
 }
 
 export interface GeelistTagOption {

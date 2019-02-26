@@ -2,6 +2,10 @@
   <div class="geelist-component">
     <div class="geelist-header">
       <div>
+        <span
+          v-if="selectedList.length>0"
+          style="margin-right:10px"
+        >已选中 {{selectedList.length}}/{{list.length}}</span>
         <el-input
           size="mini"
           style="width:250px"
@@ -16,6 +20,9 @@
     <table class="geelist-table">
       <thead>
         <tr>
+          <th v-if="option.checkbox" rowspan="2" width="60px">
+            <el-checkbox :indeterminate="isIndeterminate" @change="handleCheckAllChange"/>
+          </th>
           <th
             v-for="(column,i) in displayColumns"
             :key="column.label"
@@ -69,6 +76,13 @@
       </thead>
       <tbody>
         <tr v-for="row in displayList" :key="row[option.rowKey]">
+          <td v-if="option.checkbox" width="60px">
+            <el-checkbox
+              :checked="isInSelectedList(row)"
+              :value="isInSelectedList(row)"
+              @change="checkboxChanged($event,row)"
+            />
+          </td>
           <td v-for="column in displayColumns" :key="column.label" :style="column.style">
             <el-tooltip effect="dark" placement="bottom-start" v-if="column.tooltip">
               <div slot="content" style="max-width: 350px">{{getToolTipContent(row,column)}}</div>
@@ -143,6 +157,8 @@ export default class Geelist extends Vue {
   private list!: any[];
   @Prop({ required: true, type: Object })
   private option!: GeelistOption<any>;
+  @Prop({ type: Array })
+  private selectedList!: any[];
 
   private filterColunmList: GeelistFilterColumn[] = [];
 
@@ -152,6 +168,18 @@ export default class Geelist extends Vue {
     pageSize: this.option.pageSize || 10
   };
 
+  mySelectedList = this.selectedList || [];
+
+  @Watch("selectedList", { deep: true })
+  selectedListHandler(value: any[]) {
+    this.selectedList = value;
+  }
+
+  @Watch("mySelectedList", { deep: true })
+  mySelectedListHandler() {
+    this.$emit("update:selectedList", this.mySelectedList);
+  }
+
   @Watch("option", { deep: true })
   optionHandler() {
     this.initOption();
@@ -160,6 +188,50 @@ export default class Geelist extends Vue {
   @Watch("list", { deep: true })
   listHandler() {
     this.initOption();
+  }
+
+  checkboxChanged(isIn: any, row: any) {
+    console.log(isIn, row);
+    const rowKey = this.option.rowKey;
+    const existIndex = this.mySelectedList.findIndex(
+      selected => selected[rowKey] === row[rowKey]
+    );
+    if (isIn && existIndex < 0) {
+      this.mySelectedList.push(row);
+    } else if (!isIn && existIndex >= 0) {
+      this.mySelectedList.splice(existIndex, 1);
+    }
+  }
+
+  handleCheckAllChange(value: any) {
+    if (value) {
+      for (const row of this.displayList) {
+        if (!this.isInSelectedList(row)) this.mySelectedList.push(row);
+      }
+    } else {
+      for (const row of this.displayList) {
+        const rowKey = this.option.rowKey;
+        const existIndex = this.mySelectedList.findIndex(
+          selected => selected[rowKey] === row[rowKey]
+        );
+        if (existIndex >= 0) this.mySelectedList.splice(existIndex, 1);
+      }
+    }
+  }
+
+  isInSelectedList(row: any) {
+    const rowKey = this.option.rowKey;
+    const existIndex = this.mySelectedList.findIndex(
+      selected => selected[rowKey] === row[rowKey]
+    );
+    return existIndex >= 0;
+  }
+
+  get isIndeterminate() {
+    for (const row of this.displayList) {
+      if (!this.isInSelectedList(row)) return false;
+    }
+    return true;
   }
 
   // 获取原始字段值

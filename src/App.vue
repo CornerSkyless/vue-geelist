@@ -1,6 +1,7 @@
 <template>
   <div id="app">
-    <geelist :list="list" :option="option" @message="message">
+    {{selectedList.map(i=>i.id)}}
+    <geelist :list="list" :option="option" @message="message" :selectedList.sync="selectedList">
       <template slot-scope="scope" slot="avatar">
         <img :src="scope.row.uploader.avatarUrl" style="width:20px;height:20px">
       </template>
@@ -949,11 +950,13 @@ export default class App extends Vue {
       isAllowedResubmit: false
     }
   ];
+  selectedList = [];
   option: GeelistOption<any> = {
     rowKey: "id",
     pageSize: 100,
     pageSizes: [5, 10, 20, 100],
     exportExcel: "data",
+    checkbox: true,
     columnOptions: [
       { label: "编号", content: "id", input: true },
       {
