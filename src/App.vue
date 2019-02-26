@@ -2,6 +2,7 @@
   <div id="app">
     {{selectedList.map(i=>i.id)}}
     <geelist :list="list" :option="option" @message="message" :selectedList.sync="selectedList">
+      <template slot="header-end">dsad</template>
       <template slot-scope="scope" slot="avatar">
         <img :src="scope.row.uploader.avatarUrl" style="width:20px;height:20px">
       </template>
