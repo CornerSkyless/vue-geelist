@@ -13739,12 +13739,12 @@ var theme_chalk_button = __webpack_require__("1951");
 var lib_button = __webpack_require__("eedf");
 var lib_button_default = /*#__PURE__*/__webpack_require__.n(lib_button);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"f8d4f68e-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/geelist.vue?vue&type=template&id=1a7cbeba&
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"geelist-component"},[_c('div',{staticClass:"geelist-header"},[_c('div',[(_vm.mySelectedList.length>0 && _vm.option.checkbox)?_c('span',{staticStyle:{"margin-right":"10px"}},[_vm._v("已选中 "+_vm._s(_vm.mySelectedList.length)+"/"+_vm._s(_vm.list.length))]):_vm._e(),_c('el-input',{staticStyle:{"width":"250px"},attrs:{"size":"mini","placeholder":"输入关键词搜索"},model:{value:(_vm.searchParams.keyword),callback:function ($$v) {_vm.$set(_vm.searchParams, "keyword", $$v)},expression:"searchParams.keyword"}})],1),(_vm.option.exportExcel)?_c('div',[_vm._t("header-end"),_c('el-button',{attrs:{"size":"mini"},on:{"click":_vm.exportCsv}},[_vm._v("导出 Excel")])],2):_vm._e()]),_c('table',{staticClass:"geelist-table"},[_c('thead',[_c('tr',[(_vm.option.checkbox)?_c('th',{attrs:{"rowspan":"2","width":"60px"}},[_c('el-checkbox',{attrs:{"indeterminate":_vm.isIndeterminate},on:{"change":_vm.handleCheckAllChange}})],1):_vm._e(),_vm._l((_vm.displayColumns),function(column,i){return _c('th',{key:column.label,style:(column.style),attrs:{"rowspan":_vm.filterColunmList[i].type==='None' ? 2 : 1}},[_vm._v("\n          "+_vm._s(column.label)+"\n          "),(column.description)?_c('el-tooltip',{attrs:{"effect":"dark","placement":"bottom","content":column.description}},[_c('i',{staticClass:"el-icon-question"})]):_vm._e()],1)})],2),_c('tr',_vm._l((_vm.displayFilterThList),function(column,i){return _c('th',{key:column.label},[(_vm.filterColunmList[i].type==='Input')?_c('el-input',{attrs:{"size":"mini","placeholder":"检索"},model:{value:(_vm.filterColunmList[i].value),callback:function ($$v) {_vm.$set(_vm.filterColunmList[i], "value", $$v)},expression:"filterColunmList[i].value"}}):_vm._e(),(_vm.filterColunmList[i].type==='Select')?_c('el-popover',{attrs:{"placement":"bottom","width":"240","trigger":"click"}},[_c('el-checkbox-group',{model:{value:(_vm.filterColunmList[i].values),callback:function ($$v) {_vm.$set(_vm.filterColunmList[i], "values", $$v)},expression:"filterColunmList[i].values"}},_vm._l((_vm.filterColunmList[i].selectOptions),function(option){return _c('el-checkbox',{key:option,staticStyle:{"margin-left":"0","margin-right":"15px"},attrs:{"label":option}})})),_c('a',{staticClass:"select-span",class:{'text-blue':_vm.filterColunmList[i].values.length>0},attrs:{"slot":"reference"},slot:"reference"},[_c('i',{staticClass:"el-icon-caret-bottom"}),_vm._v("\n              筛选\n            ")])],1):_vm._e()],1)}))]),_c('tbody',_vm._l((_vm.displayList),function(row){return _c('tr',{key:row[_vm.option.rowKey]},[(_vm.option.checkbox)?_c('td',{attrs:{"width":"60px"}},[_c('el-checkbox',{attrs:{"checked":_vm.isInSelectedList(row),"value":_vm.isInSelectedList(row)},on:{"change":function($event){_vm.checkboxChanged($event,row)}}})],1):_vm._e(),_vm._l((_vm.displayColumns),function(column){return _c('td',{key:column.label,style:(column.style)},[(column.tooltip)?_c('el-tooltip',{attrs:{"effect":"dark","placement":"bottom-start"}},[_c('div',{staticStyle:{"max-width":"350px"},attrs:{"slot":"content"},slot:"content"},[_vm._v(_vm._s(_vm.getToolTipContent(row,column)))]),_c('span',[_vm._v(_vm._s(_vm.getContent(row,column)))])]):_vm._e(),(column.tags)?_c('el-tag',{attrs:{"type":_vm.getTagOption(row,column).type,"color":_vm.getTagOption(row,column).color}},[_vm._v(_vm._s(_vm.getContent(row,column)))]):_vm._e(),(column.slot)?_vm._t(column.slot,null,{row:row}):_vm._e(),_vm._l((column.actions || []),function(action){return _c('el-button',{key:_vm.getActionXXX(row,action,'text'),attrs:{"type":_vm.getActionXXX(row,action,'type'),"plain":_vm.getActionXXX(row,action,'plain'),"circle":_vm.getActionXXX(row,action,'circle'),"disabled":_vm.getActionXXX(row,action,'disabled'),"size":_vm.getActionXXX(row,action,'size')},on:{"click":function($event){_vm.doAction(row,action)}}},[_vm._v(_vm._s(_vm.getActionXXX(row,action,'text')))])}),(!column.tooltip && !column.tags && !column.slot && !column.actions)?_c('span',[_vm._v(_vm._s(_vm.getContent(row,column)))]):_vm._e()],2)})],2)}))]),(!_vm.option.disablePagination)?_c('div',{staticStyle:{"margin":"10px","text-align":"center"}},[_c('el-pagination',{attrs:{"background":"","current-page":_vm.searchParams.currentPage,"page-sizes":this.option.pageSizes || [5, 10, 20, 50],"page-size":_vm.searchParams.pageSize,"layout":"total, sizes, prev, pager, next, jumper","total":_vm.filterList.length},on:{"update:currentPage":function($event){_vm.$set(_vm.searchParams, "currentPage", $event)},"update:pageSize":function($event){_vm.$set(_vm.searchParams, "pageSize", $event)}}})],1):_vm._e()])}
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"f8d4f68e-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/geelist.vue?vue&type=template&id=de04c592&
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"geelist-component"},[_c('div',{staticClass:"geelist-header"},[_c('div',[(_vm.mySelectedList.length>0 && _vm.option.checkbox)?_c('span',{staticStyle:{"margin-right":"10px"}},[_vm._v("已选中 "+_vm._s(_vm.mySelectedList.length)+"/"+_vm._s(_vm.list.length))]):_vm._e(),_c('el-input',{staticStyle:{"width":"250px"},attrs:{"size":"mini","placeholder":"输入关键词搜索"},model:{value:(_vm.searchParams.keyword),callback:function ($$v) {_vm.$set(_vm.searchParams, "keyword", $$v)},expression:"searchParams.keyword"}}),_c('el-popover',{staticStyle:{"margin-left":"10px"},attrs:{"placement":"bottom","width":"250","trigger":"click"}},[_c('el-checkbox-group',{model:{value:(_vm.displayLabelList),callback:function ($$v) {_vm.displayLabelList=$$v},expression:"displayLabelList"}},_vm._l((_vm.option.columnOptions),function(col){return _c('el-checkbox',{key:col.label,staticStyle:{"margin-left":"0","margin-right":"10px"},attrs:{"label":col.label}},[_vm._v(_vm._s(col.label))])})),_c('el-button',{attrs:{"slot":"reference","type":"text"},slot:"reference"},[_vm._v("\n          调整可见列\n          "),_c('i',{staticClass:"el-icon-caret-bottom"})])],1)],1),(_vm.option.exportExcel)?_c('div',[_vm._t("header-end"),_c('el-button',{attrs:{"size":"mini"},on:{"click":_vm.exportCsv}},[_vm._v("导出 Excel")])],2):_vm._e()]),_c('table',{staticClass:"geelist-table"},[_c('thead',[_c('tr',[(_vm.option.checkbox)?_c('th',{attrs:{"rowspan":"2","width":"60px"}},[_c('el-checkbox',{attrs:{"indeterminate":_vm.isIndeterminate},on:{"change":_vm.handleCheckAllChange}})],1):_vm._e(),_vm._l((_vm.displayColumns),function(column,i){return _c('th',{key:column.label,style:(column.style),attrs:{"rowspan":_vm.filterColunmList[i].type==='None' ? 2 : 1}},[_vm._v("\n          "+_vm._s(column.label)+"\n          "),(column.description)?_c('el-tooltip',{attrs:{"effect":"dark","placement":"bottom","content":column.description}},[_c('i',{staticClass:"el-icon-question"})]):_vm._e()],1)})],2),_c('tr',_vm._l((_vm.displayFilterThList),function(column,i){return _c('th',{key:column.label},[(_vm.filterColunmList[i].type==='Input')?_c('el-input',{attrs:{"size":"mini","placeholder":"检索"},model:{value:(_vm.filterColunmList[i].value),callback:function ($$v) {_vm.$set(_vm.filterColunmList[i], "value", $$v)},expression:"filterColunmList[i].value"}}):_vm._e(),(_vm.filterColunmList[i].type==='Select')?_c('el-popover',{attrs:{"placement":"bottom","width":"240","trigger":"click"}},[_c('el-checkbox-group',{model:{value:(_vm.filterColunmList[i].values),callback:function ($$v) {_vm.$set(_vm.filterColunmList[i], "values", $$v)},expression:"filterColunmList[i].values"}},_vm._l((_vm.filterColunmList[i].selectOptions),function(option){return _c('el-checkbox',{key:option,staticStyle:{"margin-left":"0","margin-right":"15px"},attrs:{"label":option}})})),_c('a',{staticClass:"select-span",class:{'text-blue':_vm.filterColunmList[i].values.length>0},attrs:{"slot":"reference"},slot:"reference"},[_c('i',{staticClass:"el-icon-caret-bottom"}),_vm._v("\n              筛选\n            ")])],1):_vm._e()],1)}))]),_c('tbody',_vm._l((_vm.displayList),function(row){return _c('tr',{key:row[_vm.option.rowKey]},[(_vm.option.checkbox)?_c('td',{attrs:{"width":"60px"}},[_c('el-checkbox',{attrs:{"checked":_vm.isInSelectedList(row),"value":_vm.isInSelectedList(row)},on:{"change":function($event){_vm.checkboxChanged($event,row)}}})],1):_vm._e(),_vm._l((_vm.displayColumns),function(column){return _c('td',{key:column.label,style:(column.style)},[(column.tooltip)?_c('el-tooltip',{attrs:{"effect":"dark","placement":"bottom-start"}},[_c('div',{staticStyle:{"max-width":"350px"},attrs:{"slot":"content"},slot:"content"},[_vm._v(_vm._s(_vm.getToolTipContent(row,column)))]),_c('span',[_vm._v(_vm._s(_vm.getContent(row,column)))])]):_vm._e(),(column.tags)?_c('el-tag',{attrs:{"type":_vm.getTagOption(row,column).type,"color":_vm.getTagOption(row,column).color}},[_vm._v(_vm._s(_vm.getContent(row,column)))]):_vm._e(),(column.slot)?_vm._t(column.slot,null,{row:row}):_vm._e(),_vm._l((column.actions || []),function(action){return _c('el-button',{key:_vm.getActionXXX(row,action,'text'),attrs:{"type":_vm.getActionXXX(row,action,'type'),"plain":_vm.getActionXXX(row,action,'plain'),"circle":_vm.getActionXXX(row,action,'circle'),"disabled":_vm.getActionXXX(row,action,'disabled'),"size":_vm.getActionXXX(row,action,'size')},on:{"click":function($event){_vm.doAction(row,action)}}},[_vm._v(_vm._s(_vm.getActionXXX(row,action,'text')))])}),(!column.tooltip && !column.tags && !column.slot && !column.actions)?_c('span',[_vm._v(_vm._s(_vm.getContent(row,column)))]):_vm._e()],2)})],2)}))]),(!_vm.option.disablePagination)?_c('div',{staticStyle:{"margin":"10px","text-align":"center"}},[_c('el-pagination',{attrs:{"background":"","current-page":_vm.searchParams.currentPage,"page-sizes":this.option.pageSizes || [5, 10, 20, 50],"page-size":_vm.searchParams.pageSize,"layout":"total, sizes, prev, pager, next, jumper","total":_vm.filterList.length},on:{"update:currentPage":function($event){_vm.$set(_vm.searchParams, "currentPage", $event)},"update:pageSize":function($event){_vm.$set(_vm.searchParams, "pageSize", $event)}}})],1):_vm._e()])}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/geelist.vue?vue&type=template&id=1a7cbeba&
+// CONCATENATED MODULE: ./src/components/geelist.vue?vue&type=template&id=de04c592&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.array.iterator.js
 var es6_array_iterator = __webpack_require__("cadf");
@@ -14223,6 +14223,7 @@ function (_Vue) {
       pageSize: _this.option.pageSize || 10
     };
     _this.mySelectedList = _this.selectedList || [];
+    _this.displayLabelList = [];
     return _this;
   }
 
@@ -14503,7 +14504,9 @@ function (_Vue) {
     value: function initOption() {
       var _this3 = this;
 
+      this.displayLabelList = [];
       this.filterColunmList = this.option.columnOptions.map(function (column) {
+        if (!column.defaultHide) _this3.displayLabelList.push(column.label);
         if (column.input) return {
           type: "Input",
           value: "",
@@ -14573,7 +14576,9 @@ function (_Vue) {
   }, {
     key: "displayColumns",
     get: function get() {
-      return this.option.columnOptions.map(function (co) {
+      var _this4 = this;
+
+      var list = this.option.columnOptions.map(function (co) {
         var style = co.style || {};
 
         if (co.wrap) {
@@ -14585,14 +14590,17 @@ function (_Vue) {
         co.style = style;
         return co;
       });
+      return list.filter(function (col) {
+        return _this4.displayLabelList.includes(col.label);
+      });
     }
   }, {
     key: "filterList",
     get: function get() {
-      var _this4 = this;
+      var _this5 = this;
 
       return this.list.filter(function (row) {
-        var keyword = _this4.searchParams.keyword.trim();
+        var keyword = _this5.searchParams.keyword.trim();
 
         var keywordFound = false;
         var _iteratorNormalCompletion7 = true;
@@ -14600,14 +14608,14 @@ function (_Vue) {
         var _iteratorError7 = undefined;
 
         try {
-          for (var _iterator7 = _this4.displayColumns[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+          for (var _iterator7 = _this5.displayColumns[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
             var column = _step7.value;
 
             if (keyword && !keywordFound) {
               try {
-                if (_this4.getContent(row, column).includes(keyword)) keywordFound = true;
+                if (_this5.getContent(row, column).includes(keyword)) keywordFound = true;
               } catch (e) {
-                console.log(_this4.getContent(row, column));
+                console.log(_this5.getContent(row, column));
               }
             }
           }
@@ -14629,16 +14637,16 @@ function (_Vue) {
         if (keyword && !keywordFound) return false;
         return true;
       }).filter(function (row) {
-        for (var i = 0; i < _this4.displayColumns.length; i++) {
-          var filterColunm = _this4.filterColunmList[i];
-          var colunm = _this4.displayColumns[i];
+        for (var i = 0; i < _this5.displayColumns.length; i++) {
+          var filterColunm = _this5.filterColunmList[i];
+          var colunm = _this5.displayColumns[i];
 
           if (filterColunm.type === "Input" && filterColunm.value) {
-            if (!_this4.getContent(row, colunm).includes(filterColunm.value)) return false;
+            if (!_this5.getContent(row, colunm).includes(filterColunm.value)) return false;
           }
 
           if (filterColunm.type === "Select" && filterColunm.values.length > 0) {
-            if (!filterColunm.values.includes(_this4.getContent(row, colunm))) return false;
+            if (!filterColunm.values.includes(_this5.getContent(row, colunm))) return false;
           }
         }
 
@@ -14656,10 +14664,10 @@ function (_Vue) {
   }, {
     key: "displayFilterThList",
     get: function get() {
-      var _this5 = this;
+      var _this6 = this;
 
       return this.displayColumns.filter(function (column, i) {
-        return _this5.filterColunmList[i].type !== "None";
+        return _this6.filterColunmList[i].type !== "None";
       });
     }
   }]);

@@ -48,6 +48,7 @@ export interface GeelistColumnOption<T> {
   actions?: GeelistActionOption<T>[];
   input?: boolean;
   select?: boolean;
+  defaultHide?:boolean;
 }
 type GeelistFilterColumnType = "None" | "Input" | "Select";
 export interface GeelistFilterColumn {

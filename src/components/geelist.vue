@@ -12,6 +12,20 @@
           v-model="searchParams.keyword"
           placeholder="输入关键词搜索"
         ></el-input>
+        <el-popover placement="bottom" width="250" trigger="click" style="margin-left:10px">
+          <el-checkbox-group v-model="displayLabelList">
+            <el-checkbox
+              v-for="col in option.columnOptions"
+              :label="col.label"
+              :key="col.label"
+              style="margin-left:0;margin-right:10px"
+            >{{col.label}}</el-checkbox>
+          </el-checkbox-group>
+          <el-button type="text" slot="reference">
+            调整可见列
+            <i class="el-icon-caret-bottom"></i>
+          </el-button>
+        </el-popover>
       </div>
       <div v-if="option.exportExcel">
         <slot name="header-end"></slot>
@@ -170,6 +184,8 @@ export default class Geelist extends Vue {
   };
 
   mySelectedList = this.selectedList || [];
+
+  displayLabelList: string[] = [];
 
   @Watch("selectedList", { deep: true })
   selectedListHandler(value: any[]) {
@@ -341,16 +357,19 @@ export default class Geelist extends Vue {
   }
 
   get displayColumns(): GeelistColumnOption<any>[] {
-    return this.option.columnOptions.map((co: GeelistColumnOption<any>) => {
-      const style: any = co.style || {};
-      if (co.wrap) {
-        style["text-overflow"] = "inherit";
-        style["overflow"] = "auto";
-        style["white-space"] = "normal";
+    const list = this.option.columnOptions.map(
+      (co: GeelistColumnOption<any>) => {
+        const style: any = co.style || {};
+        if (co.wrap) {
+          style["text-overflow"] = "inherit";
+          style["overflow"] = "auto";
+          style["white-space"] = "normal";
+        }
+        co.style = style;
+        return co;
       }
-      co.style = style;
-      return co;
-    });
+    );
+    return list.filter(col => this.displayLabelList.includes(col.label));
   }
 
   get filterList(): any[] {
@@ -407,8 +426,10 @@ export default class Geelist extends Vue {
   }
 
   initOption() {
+    this.displayLabelList = [];
     this.filterColunmList = this.option.columnOptions.map(
       (column): GeelistFilterColumn => {
+        if (!column.defaultHide) this.displayLabelList.push(column.label);
         if (column.input)
           return {
             type: "Input",
