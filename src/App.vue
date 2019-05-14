@@ -1,7 +1,13 @@
 <template>
   <div id="app">
     {{selectedList.map(i=>i.id)}}
-    <geelist :list="list" :option="option" @message="message" :selectedList.sync="selectedList">
+    <geelist
+      :list="list"
+      :option="option"
+      @message="message"
+      :selectedList.sync="selectedList"
+      @row-click="rowOnClick"
+    >
       <template slot="header-end">dsad</template>
       <template slot-scope="scope" slot="avatar">
         <img :src="scope.row.uploader.avatarUrl" style="width:20px;height:20px">
@@ -1049,6 +1055,9 @@ export default class App extends Vue {
   };
   message(row: any) {
     alert("点击了: " + row.id);
+  }
+  rowOnClick(row: any, i: number) {
+    console.log(row, i);
   }
 }
 </script>

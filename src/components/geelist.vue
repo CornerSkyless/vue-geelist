@@ -90,7 +90,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="row in displayList" :key="row[option.rowKey]">
+        <tr v-for="(row,i) in displayList" :key="row[option.rowKey]" @click="clickOnRow(row,i)">
           <td v-if="option.checkbox" width="60px">
             <el-checkbox
               :checked="isInSelectedList(row)"
@@ -215,9 +215,6 @@ export default class Geelist extends Vue {
   }
 
   getRowspan(row: any, column: GeelistColumnOption<any>) {
-    if (column.rowspan) {
-      console.log(IndexByIndex(row, column.rowspan));
-    }
     const res = IndexByIndex(row, column.rowspan);
     if (res === 0) return 0;
     return res || 1;
@@ -240,6 +237,10 @@ export default class Geelist extends Vue {
     } else if (!isIn && existIndex >= 0) {
       this.mySelectedList.splice(existIndex, 1);
     }
+  }
+
+  clickOnRow(row: any, index: number) {
+    this.$emit("row-click", row, index);
   }
 
   handleCheckAllChange(value: any) {
