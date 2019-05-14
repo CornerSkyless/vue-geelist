@@ -98,7 +98,14 @@
               @change="checkboxChanged($event,row)"
             />
           </td>
-          <td v-for="column in displayColumns" :key="column.label" :style="column.style">
+          <td
+            v-for="column in displayColumns"
+            :key="column.label"
+            :style="column.style"
+            :rowspan="getRowspan(row,column)"
+            :colspan="getColspan(row,column)"
+            :class="{'displayNone':getRowspan(row,column)===0 || getColspan(row,column)===0}"
+          >
             <el-tooltip effect="dark" placement="bottom-start" v-if="column.tooltip">
               <div slot="content" style="max-width: 350px">{{getToolTipContent(row,column)}}</div>
               <span>{{getContent(row,column)}}</span>
@@ -149,7 +156,7 @@ import {
   GeelistFilterColumn
 } from "./interface";
 const CsvExportor = require("csv-exportor");
-function IndexByIndex(obj: any, indexes = ""): string | boolean {
+function IndexByIndex(obj: any, indexes = ""): string | boolean | number {
   let levels = indexes.split(".");
   if (levels.length === 0) return "";
   const index = levels[0];
@@ -205,6 +212,21 @@ export default class Geelist extends Vue {
   @Watch("list", { deep: true })
   listHandler() {
     this.initOption();
+  }
+
+  getRowspan(row: any, column: GeelistColumnOption<any>) {
+    if (column.rowspan) {
+      console.log(IndexByIndex(row, column.rowspan));
+    }
+    const res = IndexByIndex(row, column.rowspan);
+    if (res === 0) return 0;
+    return res || 1;
+  }
+
+  getColspan(row: any, column: GeelistColumnOption<any>) {
+    const res = IndexByIndex(row, column.colspan);
+    if (res === 0) return 0;
+    return res || 1;
   }
 
   checkboxChanged(isIn: any, row: any) {
@@ -508,10 +530,12 @@ export default class Geelist extends Vue {
   border-spacing: 0;
   border: 1px solid #e8e8e8 !important;
   background: #f1f3f5;
+  width: 100%;
+  overflow-x: hidden;
+  table-layout: fixed;
   thead {
     width: 100%;
     table-layout: fixed;
-    display: table;
     tr:nth-child(1) {
       th {
         border-top: 0 !important;
@@ -540,11 +564,12 @@ export default class Geelist extends Vue {
   }
   tbody {
     overflow-y: scroll;
+    table-layout: fixed;
     tr:nth-child(-1) {
       border-bottom: 0;
     }
     tr {
-      display: table;
+      // display: table;
       width: 100%;
       table-layout: fixed;
       td {
@@ -581,6 +606,9 @@ export default class Geelist extends Vue {
   }
   .popperClass {
     width: 200px !important;
+  }
+  .displayNone {
+    display: none;
   }
 }
 </style>

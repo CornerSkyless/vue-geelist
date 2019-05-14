@@ -27,6 +27,7 @@ export default class App extends Vue {
       isForked: false,
       forkedQuestionId: null,
       id: 881,
+      rowspan: 2,
       isDelayJudge: false,
       source: "",
       serialNumber: "T-3",
@@ -77,6 +78,8 @@ export default class App extends Vue {
       createdAt: "2018-10-07 16:47",
       isContest: false,
       isForked: false,
+      rowspan: 0,
+      colspan: 0,
       forkedQuestionId: null,
       id: 880,
       isDelayJudge: false,
@@ -990,6 +993,8 @@ export default class App extends Vue {
         tooltipText(row) {
           return "tooltipText " + row.id;
         },
+        rowspan: "rowspan",
+        colspan: "colspan",
         input: true
       },
       {
@@ -997,7 +1002,10 @@ export default class App extends Vue {
         content: "description",
         wrap: false,
         tooltip: false,
-        input: true
+        input: true,
+        style: {
+          width: "200px"
+        }
       },
       { label: "上传者", content: "uploader.username", select: true },
       {
