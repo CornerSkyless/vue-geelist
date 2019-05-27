@@ -27,9 +27,9 @@
           </el-button>
         </el-popover>
       </div>
-      <div v-if="option.exportExcel">
+      <div>
         <slot name="header-end"></slot>
-        <el-button size="mini" @click="exportCsv">导出 Excel</el-button>
+        <el-button v-if="option.exportExcel" size="mini" @click="exportCsv">导出 Excel</el-button>
       </div>
     </div>
     <table class="geelist-table">
@@ -196,7 +196,7 @@ export default class Geelist extends Vue {
 
   @Watch("selectedList", { deep: true })
   selectedListHandler(value: any[]) {
-    this.selectedList = value;
+    this.mySelectedList = value;
   }
 
   @Watch("mySelectedList", { deep: true })
@@ -227,7 +227,6 @@ export default class Geelist extends Vue {
   }
 
   checkboxChanged(isIn: any, row: any) {
-    console.log(isIn, row);
     const rowKey = this.option.rowKey;
     const existIndex = this.mySelectedList.findIndex(
       selected => selected[rowKey] === row[rowKey]
