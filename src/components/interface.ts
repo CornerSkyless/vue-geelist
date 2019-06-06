@@ -7,7 +7,8 @@ export interface GeelistOption<T> {
   columnOptions: GeelistColumnOption<T>[]
   exportExcel?: string
   disablePagination?: boolean
-  checkbox?: boolean
+  checkbox?: boolean,
+  classNames?: ((row: T) => string[]) | string[] // 自定义背景
 }
 
 export interface GeelistTagOption {
@@ -33,6 +34,7 @@ export interface GeelistColumnOption<T> {
   label: string // 标题
   description?: string // 列简介
   content?: ((row: T) => string) | string // 自定义文字内容
+  classNames?: ((row: T) => string[]) | string[] // 自定义背景
   style?: any // 默认样式
   slot?: string
   wrap?: boolean // 强制换行

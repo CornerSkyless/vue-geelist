@@ -90,7 +90,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(row,i) in displayList" :key="row[option.rowKey]" @click="clickOnRow(row,i)">
+        <tr v-for="(row,i) in displayList" :key="row[option.rowKey]" @click="clickOnRow(row,i)" :class="getRowClassNames(row)">
           <td v-if="option.checkbox" width="60px">
             <el-checkbox
               :checked="isInSelectedList(row)"
@@ -104,7 +104,7 @@
             :style="column.style"
             :rowspan="getRowspan(row,column)"
             :colspan="getColspan(row,column)"
-            :class="{'displayNone':getRowspan(row,column)===0 || getColspan(row,column)===0}"
+            :class="getColumnClassNames(row,column)"
           >
             <el-tooltip effect="dark" placement="bottom-start" v-if="column.tooltip">
               <div slot="content" style="max-width: 350px">{{getToolTipContent(row,column)}}</div>
@@ -298,6 +298,22 @@ export default class Geelist extends Vue {
   getActionXXX(row: any, actionOption: any, XXX: string): string {
     if (typeof actionOption[XXX] === "function") return actionOption[XXX](row);
     else return actionOption[XXX];
+  }
+
+  getColumnClassNames(row:any,columnOption: GeelistColumnOption<any>){
+    const list = [];
+    if(this.getRowspan(row,columnOption)===0 || this.getColspan(row,columnOption)===0){
+      list.push('displayNone')
+    }
+    if(!columnOption.classNames) return list;
+    if(typeof columnOption.classNames === "function") return list.concat(columnOption.classNames(row));
+    return list.concat(columnOption.classNames);
+  }
+
+  getRowClassNames(row:any){
+    if(!this.option.classNames) return [];
+    if(typeof this.option.classNames === "function") return this.option.classNames(row);
+    return this.option.classNames;
   }
 
   doAction(row: any, actionOption: GeelistActionOption<any>) {
@@ -570,6 +586,7 @@ export default class Geelist extends Vue {
   tbody {
     overflow-y: scroll;
     table-layout: fixed;
+    background: white;
     tr:nth-child(-1) {
       border-bottom: 0;
     }
@@ -584,7 +601,6 @@ export default class Geelist extends Vue {
         padding: 5px;
         text-align: center;
         font-size: 12px;
-        background: white;
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;

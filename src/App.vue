@@ -983,6 +983,9 @@ export default class App extends Vue {
       {
         label: "编号（tags）",
         content: "id",
+        classNames(row){
+          return ['bg-blue']
+        },
         tags: [
           { case: 881, text: "八八一", type: "success" },
           { in: [874, 872], type: "error" },
@@ -1063,4 +1066,8 @@ export default class App extends Vue {
 </script>
 
 <style lang="scss">
+  .bg-blue{
+      background: blue;
+
+  }
 </style>
