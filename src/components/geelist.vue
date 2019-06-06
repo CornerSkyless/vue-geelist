@@ -133,6 +133,11 @@
         </tr>
       </tbody>
     </table>
+    <slot name="no-data" v-if="displayList.length===0" >
+      <div class="no-data">
+        暂无数据
+      </div>
+    </slot>
     <div style="margin:10px;text-align:center" v-if="!option.disablePagination">
       <el-pagination
         background
@@ -611,4 +616,10 @@ export default class Geelist extends Vue {
     display: none;
   }
 }
+  .no-data{
+    background: white;height: 300px;display: flex;justify-content: center;align-items: center;
+    border: 1px solid #e8e8e8;
+    color: rgba(0, 0, 0, 0.5);
+
+  }
 </style>
