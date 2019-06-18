@@ -131,7 +131,7 @@
             >{{getContent(row,column)}}</span>
           </td>
         </tr>
-        <tr v-if="hasSumUp">
+        <tr v-if="hasSumUp && filterList.length>0">
           <td v-if="option.checkbox" width="60px"></td>
           <td
                   v-for="(column,i) in displayColumns"
@@ -139,8 +139,13 @@
                   :rowspan="filterColunmList[i].type==='None' ? 2 : 1"
           >
             <span v-if="column.sumUp">
-              本页总和: {{getColumnSumUp(displayList,column)}} <br>
-              所有页总和: {{getColumnSumUp(filterList,column)}}
+              <span v-if="!option.disablePagination">
+                本页总和: {{getColumnSumUp(displayList,column)}} <br>
+                所有页总和: {{getColumnSumUp(filterList,column)}}
+              </span>
+              <span v-else>
+                总和: {{getColumnSumUp(filterList,column)}}
+              </span>
             </span>
           </td>
         </tr>
@@ -148,7 +153,10 @@
     </table>
     <slot name="no-data" v-if="displayList.length===0" >
       <div class="no-data">
-        暂无数据
+        <div style="text-align: center">
+          <img src="../assets/no-data.jpg" alt="">
+          <div style="color: #b3bdc6">暂无数据</div>
+        </div>
       </div>
     </slot>
     <div style="margin:10px;text-align:center" v-if="!option.disablePagination">
