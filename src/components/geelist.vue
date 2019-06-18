@@ -131,6 +131,19 @@
             >{{getContent(row,column)}}</span>
           </td>
         </tr>
+        <tr v-if="hasSumUp">
+          <td v-if="option.checkbox" width="60px"></td>
+          <td
+                  v-for="(column,i) in displayColumns"
+                  :key="column.label"
+                  :rowspan="filterColunmList[i].type==='None' ? 2 : 1"
+          >
+            <span v-if="column.sumUp">
+              本页总和: {{getColumnSumUp(displayList,column)}} <br>
+              所有页总和: {{getColumnSumUp(filterList,column)}}
+            </span>
+          </td>
+        </tr>
       </tbody>
     </table>
     <slot name="no-data" v-if="displayList.length===0" >
@@ -199,6 +212,13 @@ export default class Geelist extends Vue {
 
   displayLabelList: string[] = [];
 
+  get hasSumUp(){
+    for(const option of this.option.columnOptions){
+      if(option.sumUp) return true;
+    }
+    return false
+  }
+
   @Watch("selectedList", { deep: true })
   selectedListHandler(value: any[]) {
     this.mySelectedList = value;
@@ -229,6 +249,16 @@ export default class Geelist extends Vue {
     const res = IndexByIndex(row, column.colspan);
     if (res === 0) return 0;
     return res || 1;
+  }
+
+  getColumnSumUp(list:any[],column:GeelistColumnOption<any>){
+    let ans = 0;
+    list.forEach(row=>{
+      if(column.sumUp){
+        ans += column.sumUp(row);
+      }
+    })
+    return ans;
   }
 
   checkboxChanged(isIn: any, row: any) {

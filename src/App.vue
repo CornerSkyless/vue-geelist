@@ -968,7 +968,9 @@ export default class App extends Vue {
     exportExcel: "data",
     checkbox: true,
     columnOptions: [
-      { label: "编号", content: "id", input: true },
+      { label: "编号", content: "id", input: true ,sumUp(row){
+        return row.id
+        }},
       {
         label: "编辑认证",
         content: "isCertificate",

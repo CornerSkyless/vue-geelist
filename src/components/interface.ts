@@ -34,6 +34,7 @@ export interface GeelistColumnOption<T> {
   label: string // 标题
   description?: string // 列简介
   content?: ((row: T) => string) | string // 自定义文字内容
+  sumUp?: (row: T) => number
   classNames?: ((row: T) => string[]) | string[] // 自定义背景
   style?: any // 默认样式
   slot?: string
