@@ -59,19 +59,19 @@
           <th v-for="(column,i) in displayFilterThList" :key="column.label">
             <el-input
               size="mini"
-              v-if="filterColunmList[i].type==='Input'"
-              v-model="filterColunmList[i].value"
+              v-if="filterColunmList[getOriginColumnIndex(column)].type==='Input'"
+              v-model="filterColunmList[getOriginColumnIndex(column)].value"
               placeholder="检索"
             ></el-input>
             <el-popover
-              v-if="filterColunmList[i].type==='Select'"
+              v-if="filterColunmList[getOriginColumnIndex(column)].type==='Select'"
               placement="bottom"
               width="240"
               trigger="click"
             >
-              <el-checkbox-group v-model="filterColunmList[i].values">
+              <el-checkbox-group v-model="filterColunmList[getOriginColumnIndex(column)].values">
                 <el-checkbox
-                  v-for="option in filterColunmList[i].selectOptions"
+                  v-for="option in filterColunmList[getOriginColumnIndex(column)].selectOptions"
                   :key="option"
                   :label="option"
                   style="margin-left:0;margin-right:15px"
@@ -80,7 +80,7 @@
               <a
                 slot="reference"
                 class="select-span"
-                :class="{'text-blue':filterColunmList[i].values.length>0}"
+                :class="{'text-blue':filterColunmList[getOriginColumnIndex(column)].values.length>0}"
               >
                 <i class="el-icon-caret-bottom"></i>
                 筛选
@@ -504,6 +504,10 @@ export default class Geelist extends Vue {
     return this.displayColumns.filter((column, i) => {
       return this.filterColunmList[i].type !== "None";
     });
+  }
+
+  getOriginColumnIndex(column: GeelistColumnOption<any>){
+    return this.option.columnOptions.findIndex(c=>c.label===column.label);
   }
 
   initOption() {
