@@ -266,7 +266,7 @@ export default class Geelist extends Vue {
         ans += column.sumUp(row);
       }
     })
-    return ans;
+    return ans.toFixed(2);
   }
 
   checkboxChanged(isIn: any, row: any) {
