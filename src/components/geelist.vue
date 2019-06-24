@@ -1,6 +1,5 @@
 <template>
   <div class="geelist-component">
-    {{filterColumnList}}
     <div class="geelist-header">
       <div>
         <span
