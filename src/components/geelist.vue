@@ -1,5 +1,6 @@
 <template>
   <div class="geelist-component">
+    {{filterColumnList}}
     <div class="geelist-header">
       <div>
         <span
@@ -42,7 +43,7 @@
             v-for="(column,i) in displayColumns"
             :key="column.label"
             :style="column.style"
-            :rowspan="filterColunmList[i].type==='None' ? 2 : 1"
+            :rowspan="filterColumnList[i].type==='None' ? 2 : 1"
           >
             {{column.label}}
             <el-tooltip
@@ -59,19 +60,19 @@
           <th v-for="(column,i) in displayFilterThList" :key="column.label">
             <el-input
               size="mini"
-              v-if="filterColunmList[getOriginColumnIndex(column)].type==='Input'"
-              v-model="filterColunmList[getOriginColumnIndex(column)].value"
+              v-if="filterColumnList[getOriginColumnIndex(column)].type==='Input'"
+              v-model="filterColumnList[getOriginColumnIndex(column)].value"
               placeholder="检索"
             ></el-input>
             <el-popover
-              v-if="filterColunmList[getOriginColumnIndex(column)].type==='Select'"
+              v-if="filterColumnList[getOriginColumnIndex(column)].type==='Select'"
               placement="bottom"
               width="240"
               trigger="click"
             >
-              <el-checkbox-group v-model="filterColunmList[getOriginColumnIndex(column)].values">
+              <el-checkbox-group v-model="filterColumnList[getOriginColumnIndex(column)].values">
                 <el-checkbox
-                  v-for="option in filterColunmList[getOriginColumnIndex(column)].selectOptions"
+                  v-for="option in filterColumnList[getOriginColumnIndex(column)].selectOptions"
                   :key="option"
                   :label="option"
                   style="margin-left:0;margin-right:15px"
@@ -80,7 +81,7 @@
               <a
                 slot="reference"
                 class="select-span"
-                :class="{'text-blue':filterColunmList[getOriginColumnIndex(column)].values.length>0}"
+                :class="{'text-blue':filterColumnList[getOriginColumnIndex(column)].values.length>0}"
               >
                 <i class="el-icon-caret-bottom"></i>
                 筛选
@@ -136,7 +137,7 @@
           <td
                   v-for="(column,i) in displayColumns"
                   :key="column.label"
-                  :rowspan="filterColunmList[i].type==='None' ? 2 : 1"
+                  :rowspan="filterColumnList[i].type==='None' ? 2 : 1"
           >
             <span v-if="column.sumUp">
               <span v-if="!option.disablePagination">
@@ -208,7 +209,7 @@ export default class Geelist extends Vue {
   @Prop({ type: Array })
   private selectedList!: any[];
 
-  private filterColunmList: GeelistFilterColumn[] = [];
+  private filterColumnList: GeelistFilterColumn[] = [];
 
   searchParams = {
     keyword: "",
@@ -473,17 +474,18 @@ export default class Geelist extends Vue {
       })
       .filter(row => {
         for (let i = 0; i < this.displayColumns.length; i++) {
-          const filterColunm = this.filterColunmList[i];
-          const colunm = this.displayColumns[i];
-          if (filterColunm.type === "Input" && filterColunm.value) {
-            if (!this.getContent(row, colunm).includes(filterColunm.value))
+          const column = this.displayColumns[i];
+          const filterColumn = this.filterColumnList[this.getOriginColumnIndex(column)];
+
+          if (filterColumn.type === "Input" && filterColumn.value) {
+            if (!this.getContent(row, column).includes(filterColumn.value))
               return false;
           }
           if (
-            filterColunm.type === "Select" &&
-            filterColunm.values.length > 0
+            filterColumn.type === "Select" &&
+            filterColumn.values.length > 0
           ) {
-            if (!filterColunm.values.includes(this.getContent(row, colunm)))
+            if (!filterColumn.values.includes(this.getContent(row, column)))
               return false;
           }
         }
@@ -502,7 +504,7 @@ export default class Geelist extends Vue {
 
   get displayFilterThList(): any[] {
     return this.displayColumns.filter((column, i) => {
-      return this.filterColunmList[i].type !== "None";
+      return this.filterColumnList[i].type !== "None";
     });
   }
 
@@ -512,7 +514,7 @@ export default class Geelist extends Vue {
 
   initOption() {
     this.displayLabelList = [];
-    this.filterColunmList = this.option.columnOptions.map(
+    this.filterColumnList = this.option.columnOptions.map(
       (column): GeelistFilterColumn => {
         if (!column.defaultHide) this.displayLabelList.push(column.label);
         if (column.input)
