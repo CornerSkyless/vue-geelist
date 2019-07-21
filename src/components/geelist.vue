@@ -6,7 +6,7 @@
           v-if="mySelectedList.length>0 && option.checkbox"
           style="margin-right:10px"
         >已选中 {{mySelectedList.length}}/{{list.length}}</span>
-        <el-input
+        <el-input v-if="!options.disableGlobalSearch"
           size="mini"
           style="width:250px"
           v-model="searchParams.keyword"

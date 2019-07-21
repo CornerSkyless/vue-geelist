@@ -1,6 +1,7 @@
 export interface GeelistOption<T> {
   rowKey: string // 唯一键
-  showColumnFilter?: boolean
+  showColumnFilter?: boolean;
+  disableGlobalSearch?: boolean;
   emptyText?: string
   pageSize?: number
   pageSizes?: number[]
