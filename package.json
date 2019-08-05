@@ -1,7 +1,7 @@
 {
   "name": "vue-geelist",
   "description": "A data table for lazy coder based on Element-UI.",
-  "version": "0.0.31",
+  "version": "0.1.1",
   "author": "cornerskyless <573196853@qq.com>",
   "license": "MIT",
   "private": false,
@@ -9,7 +9,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "make": "vue-cli-service build --target lib --name vue-geelist src/components/index.ts"
+    "make": "vue-cli-service build --target lib --name vue-geelist --dest dist packages/components/index.ts"
   },
   "main": "dist/vue-geelist.umd.js",
   "dependencies": {

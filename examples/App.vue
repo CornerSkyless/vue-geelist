@@ -18,7 +18,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { GeelistOption } from "./components/interface";
+import { GeelistOption } from "../packages/components/interface";
 
 @Component({
   components: {}
@@ -968,7 +968,7 @@ export default class App extends Vue {
     exportExcel: "data",
     checkbox: true,
     columnOptions: [
-      { label: "编号", content: "id", input: true ,sumUp(row){
+      { label: "编号", content: "id", input: true ,sumUp(row:any){
         return row.id
         }},
       {
@@ -985,7 +985,7 @@ export default class App extends Vue {
       {
         label: "编号（tags）",
         content: "id",
-        classNames(row){
+        classNames(row:any){
           return ['bg-blue']
         },
         tags: [
@@ -1001,7 +1001,7 @@ export default class App extends Vue {
         content: "topic",
         description: "这是这个列的简介",
         tooltip: true,
-        tooltipText(row) {
+        tooltipText(row:any) {
           return "tooltipText " + row.id;
         },
         rowspan: "rowspan",
@@ -1043,14 +1043,14 @@ export default class App extends Vue {
             size: "mini"
           },
           {
-            text(row) {
+            text(row:any) {
               return row.isCertificate ? "已认证" : "加认证";
             },
             type: "text",
-            handler(row) {
+            handler(row:any) {
               row.isCertificate = true;
             },
-            disabled(row) {
+            disabled(row:any) {
               return row.isCertificate;
             }
           }
