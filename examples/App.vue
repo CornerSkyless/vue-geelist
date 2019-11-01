@@ -19,6 +19,16 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { GeelistOption } from "../packages/components/interface";
+class ExampleA{
+  constructor(source:any){
+    Object.assign(this,source);
+  }
+}
+class ExampleB{
+  constructor(source:any){
+    Object.assign(this,source);
+  }
+}
 
 @Component({
   components: {}
@@ -959,14 +969,18 @@ export default class App extends Vue {
       isAllowedEdit: false,
       isAllowedResubmit: false
     }
-  ];
+  ].map(item => {
+    if(item.id%2==0) return new ExampleA((item));
+    else return new ExampleB((item))
+  });
   selectedList = [];
   option: GeelistOption<any> = {
     rowKey: "id",
-    pageSize: 100,
-    pageSizes: [5, 10, 20, 100],
-    exportExcel: "data",
+    // pageSize: 100,
+    // pageSizes: [5, 10, 20, 100],
+    // exportExcel: "data",
     checkbox: true,
+    disablePagination:true,
     columnOptions: [
       { label: "编号", content: "id",
         sort(a,b){
@@ -1031,8 +1045,10 @@ export default class App extends Vue {
       {
         label: "头像",
         description: "这是插槽的使用方法",
-        content: "uploader.avatarUrl",
-        slot: "avatar",
+        content:(row) => {
+          console.log(row);
+          return 'wadaw'
+        },
         style: {
           width: "40px"
         }

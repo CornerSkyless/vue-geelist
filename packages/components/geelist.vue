@@ -481,7 +481,6 @@ export default class Geelist extends Vue {
               if (this.getContent(row, column).includes(keyword))
                 keywordFound = true;
             } catch (e) {
-              console.log(this.getContent(row, column));
             }
           }
         }
@@ -522,17 +521,16 @@ export default class Geelist extends Vue {
         if(this.searchParams.sortType === 'DESC') displayList = displayList.sort((a:any,b:any)=>(this.getContent(b,existSortColumn).localeCompare(this.getContent(a,existSortColumn))));
       }
     }
-    if (this.option.disablePagination) return displayList;
-    const start =
-      (this.searchParams.currentPage - 1) * this.searchParams.pageSize;
-    const end = start + this.searchParams.pageSize;
-    displayList =  displayList.slice(start, end);
     const finalList:any = [];
     const rowKey = this.option.rowKey;
     displayList.forEach((item:any)=>{
       finalList.push(this.filterList.find(i=>i[rowKey]===item[rowKey]));
     });
-    return finalList;
+    if (this.option.disablePagination) return finalList;
+    const start =
+      (this.searchParams.currentPage - 1) * this.searchParams.pageSize;
+    const end = start + this.searchParams.pageSize;
+    return finalList.slice(start, end);
   }
 
   get displayFilterThList(): any[] {
