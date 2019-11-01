@@ -1,7 +1,7 @@
 {
   "name": "vue-geelist",
   "description": "A data table for lazy coder based on Element-UI.",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "author": "cornerskyless <573196853@qq.com>",
   "license": "MIT",
   "private": false,

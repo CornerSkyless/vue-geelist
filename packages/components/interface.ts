@@ -54,7 +54,8 @@ export interface GeelistColumnOption<T> {
   select?: boolean
   defaultHide?: boolean
   rowspan?: string
-  colspan?: string
+  colspan?: string,
+  sort?: ((a: T,b: T) => number) | boolean // 自定义文字内容
 }
 type GeelistFilterColumnType = "None" | "Input" | "Select"
 export interface GeelistFilterColumn {

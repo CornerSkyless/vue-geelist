@@ -968,7 +968,10 @@ export default class App extends Vue {
     exportExcel: "data",
     checkbox: true,
     columnOptions: [
-      { label: "编号", content: "id", input: true ,sumUp(row:any){
+      { label: "编号", content: "id",
+        sort(a,b){
+          return a.id - b.id;
+        }, input: true ,sumUp(row:any){
         return row.id
         }},
       {
@@ -1004,6 +1007,7 @@ export default class App extends Vue {
         tooltipText(row:any) {
           return "tooltipText " + row.id;
         },
+        sort:true,
         rowspan: "rowspan",
         colspan: "colspan",
         input: true

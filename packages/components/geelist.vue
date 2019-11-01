@@ -27,7 +27,7 @@
           </el-button>
         </el-popover>
       </div>
-      <div>
+      <div style="display: flex;align-items: center">
         <slot name="header-end"></slot>
         <el-button v-if="option.exportExcel" size="mini" @click="exportCsv">导出 Excel</el-button>
       </div>
@@ -53,10 +53,14 @@
             >
               <i class="el-icon-question"></i>
             </el-tooltip>
+            <span style="margin-left: 5px;cursor:pointer" @click="toggleSort(column)" v-if="column.sort">
+              <i class="el-icon-sort-up" :class="{'text-blue':searchParams.sortLabel===column.label && searchParams.sortType==='ASC'}"></i>
+              <i class="el-icon-sort-down" :class="{'text-blue':searchParams.sortLabel===column.label && searchParams.sortType==='DESC'}"></i>
+            </span>
           </th>
         </tr>
         <tr>
-          <th v-for="(column,i) in displayFilterThList" :key="column.label">
+          <th v-for="(column) in displayFilterThList" :key="column.label">
             <el-input
               size="mini"
               v-if="filterColumnList[getOriginColumnIndex(column)].type==='Input'"
@@ -213,7 +217,9 @@ export default class Geelist extends Vue {
   searchParams = {
     keyword: "",
     currentPage: 1,
-    pageSize: this.option.pageSize || 10
+    pageSize: this.option.pageSize || 10,
+    sortType:'',
+    sortLabel:''
   };
 
   mySelectedList = this.selectedList || [];
@@ -437,6 +443,17 @@ export default class Geelist extends Vue {
     );
   }
 
+  toggleSort(column:GeelistColumnOption<any>){
+    if(this.searchParams.sortLabel === column.label){
+      if(this.searchParams.sortType === '') this.searchParams.sortType = 'ASC';
+      else if(this.searchParams.sortType === 'ASC') this.searchParams.sortType = 'DESC';
+      else if(this.searchParams.sortType === 'DESC') this.searchParams.sortType = '';
+    }else{
+      this.searchParams.sortLabel = column.label;
+      this.searchParams.sortType = 'ASC';
+    }
+  }
+
   get displayColumns(): GeelistColumnOption<any>[] {
     const list = this.option.columnOptions.map(
       (co: GeelistColumnOption<any>) => {
@@ -493,12 +510,23 @@ export default class Geelist extends Vue {
   }
 
   get displayList(): any[] {
-    if (this.option.disablePagination) return this.filterList;
-
+    let displayList = JSON.parse(JSON.stringify(this.filterList));
+    const existSortColumn = this.option.columnOptions.find(c=>c.label===this.searchParams.sortLabel);
+    if(existSortColumn && existSortColumn.sort && this.searchParams.sortType){
+      const sortRule = existSortColumn.sort;
+      if(typeof sortRule === 'function'){
+        if(this.searchParams.sortType === 'ASC') displayList = displayList.sort((a:any,b:any)=> sortRule(a,b));
+        if(this.searchParams.sortType === 'DESC') displayList = displayList.sort((a:any,b:any)=> sortRule(b,a));
+      }else{
+        if(this.searchParams.sortType === 'ASC') displayList = displayList.sort((a:any,b:any)=>(this.getContent(a,existSortColumn).localeCompare(this.getContent(b,existSortColumn))));
+        if(this.searchParams.sortType === 'DESC') displayList = displayList.sort((a:any,b:any)=>(this.getContent(b,existSortColumn).localeCompare(this.getContent(a,existSortColumn))));
+      }
+    }
+    if (this.option.disablePagination) return displayList;
     const start =
       (this.searchParams.currentPage - 1) * this.searchParams.pageSize;
     const end = start + this.searchParams.pageSize;
-    return this.filterList.slice(start, end);
+    return displayList.slice(start, end);
   }
 
   get displayFilterThList(): any[] {
