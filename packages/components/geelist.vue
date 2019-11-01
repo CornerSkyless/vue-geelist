@@ -526,7 +526,13 @@ export default class Geelist extends Vue {
     const start =
       (this.searchParams.currentPage - 1) * this.searchParams.pageSize;
     const end = start + this.searchParams.pageSize;
-    return displayList.slice(start, end);
+    displayList =  displayList.slice(start, end);
+    const finalList:any = [];
+    const rowKey = this.option.rowKey;
+    displayList.forEach((item:any)=>{
+      finalList.push(this.filterList.find(i=>i[rowKey]===item[rowKey]));
+    });
+    return finalList;
   }
 
   get displayFilterThList(): any[] {
