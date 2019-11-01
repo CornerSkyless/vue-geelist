@@ -54,8 +54,8 @@
               <i class="el-icon-question"></i>
             </el-tooltip>
             <span style="margin-left: 5px;cursor:pointer" @click="toggleSort(column)" v-if="column.sort">
-              <i class="el-icon-sort-up" :class="{'text-blue':searchParams.sortLabel===column.label && searchParams.sortType==='ASC'}"></i>
               <i class="el-icon-sort-down" :class="{'text-blue':searchParams.sortLabel===column.label && searchParams.sortType==='DESC'}"></i>
+              <i style="margin-left:-7px" class="el-icon-sort-up" :class="{'text-blue':searchParams.sortLabel===column.label && searchParams.sortType==='ASC'}"></i>
             </span>
           </th>
         </tr>
