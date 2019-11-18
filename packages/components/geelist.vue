@@ -1,6 +1,6 @@
 <template>
   <div class="geelist-component">
-    <div class="geelist-header">
+    <div class="geelist-header" v-if="!option.hideHeader">
       <div>
         <span
           v-if="mySelectedList.length>0 && option.checkbox"
@@ -38,25 +38,29 @@
           <th v-if="option.checkbox" rowspan="2" width="60px">
             <el-checkbox :indeterminate="isIndeterminate" @change="handleCheckAllChange"/>
           </th>
+
           <th
             v-for="(column,i) in displayColumns"
             :key="column.label"
             :style="column.style"
             :rowspan="filterColumnList[i].type==='None' ? 2 : 1"
           >
-            {{column.label}}
-            <el-tooltip
-              v-if="column.description"
-              effect="dark"
-              placement="bottom"
-              :content="column.description"
-            >
-              <i class="el-icon-question"></i>
-            </el-tooltip>
-            <span style="margin-left: 5px;cursor:pointer" @click="toggleSort(column)" v-if="column.sort">
-              <i class="el-icon-sort-down" :class="{'text-blue':searchParams.sortLabel===column.label && searchParams.sortType==='DESC'}"></i>
-              <i style="margin-left:-7px" class="el-icon-sort-up" :class="{'text-blue':searchParams.sortLabel===column.label && searchParams.sortType==='ASC'}"></i>
-            </span>
+            <div style="display: flex;align-items: center;justify-content: center">
+              <div style="margin-right: 5px;cursor:pointer;display: inline-block;text-align: center" @click="toggleSort(column)" v-if="column.sort">
+                <i class="el-icon-caret-top" style="display: block;margin-bottom: -6px" :class="{'text-blue':searchParams.sortLabel===column.label && searchParams.sortType==='ASC'}"></i>
+                <i class="el-icon-caret-bottom" style="display: block;" :class="{'text-blue':searchParams.sortLabel===column.label && searchParams.sortType==='DESC'}"></i>
+              </div>
+              <span>{{column.label}}</span>
+              <el-tooltip
+                      v-if="column.description"
+                      effect="dark"
+                      placement="bottom"
+                      :content="column.description"
+                      style="margin-left: 5px"
+              >
+                <i class="el-icon-question"></i>
+              </el-tooltip>
+            </div>
           </th>
         </tr>
         <tr>
@@ -517,8 +521,18 @@ export default class Geelist extends Vue {
         if(this.searchParams.sortType === 'ASC') displayList = displayList.sort((a:any,b:any)=> sortRule(a,b));
         if(this.searchParams.sortType === 'DESC') displayList = displayList.sort((a:any,b:any)=> sortRule(b,a));
       }else{
-        if(this.searchParams.sortType === 'ASC') displayList = displayList.sort((a:any,b:any)=>(this.getContent(a,existSortColumn).localeCompare(this.getContent(b,existSortColumn))));
-        if(this.searchParams.sortType === 'DESC') displayList = displayList.sort((a:any,b:any)=>(this.getContent(b,existSortColumn).localeCompare(this.getContent(a,existSortColumn))));
+        if(this.searchParams.sortType === 'ASC') displayList = displayList.sort((a:any,b:any)=>{
+          const contentA = this.getContent(a,existSortColumn);
+          const contentB = this.getContent(b,existSortColumn);
+          if(isNaN(parseFloat(contentA))) return contentA.localeCompare(contentB);
+          else return parseFloat(contentA) - parseFloat(contentB);
+        });
+        if(this.searchParams.sortType === 'DESC') displayList = displayList.sort((a:any,b:any)=>{
+          const contentA = this.getContent(a,existSortColumn);
+          const contentB = this.getContent(b,existSortColumn);
+          if(isNaN(parseFloat(contentA))) return contentB.localeCompare(contentA);
+          else return parseFloat(contentB) - parseFloat(contentA);
+        });
       }
     }
     const finalList:any = [];
