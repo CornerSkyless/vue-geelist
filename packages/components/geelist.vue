@@ -6,7 +6,8 @@
           v-if="mySelectedList.length>0 && option.checkbox"
           style="margin-right:10px"
         >已选中 {{mySelectedList.length}}/{{list.length}}</span>
-        <el-input v-if="!option.disableGlobalSearch"
+        <el-input
+          v-if="!option.disableGlobalSearch"
           size="mini"
           style="width:250px"
           v-model="searchParams.keyword"
@@ -29,14 +30,14 @@
       </div>
       <div style="display: flex;align-items: center">
         <slot name="header-end"></slot>
-        <el-button v-if="option.exportExcel" size="mini" @click="exportCsv">导出 Excel</el-button>
+        <el-button v-if="option.exportExcel" size="mini" @click="exportCsv">导出 CSV 文件</el-button>
       </div>
     </div>
     <table class="geelist-table">
       <thead>
         <tr>
           <th v-if="option.checkbox" rowspan="2" width="60px">
-            <el-checkbox :indeterminate="isIndeterminate" @change="handleCheckAllChange"/>
+            <el-checkbox :indeterminate="isIndeterminate" @change="handleCheckAllChange" />
           </th>
 
           <th
@@ -46,17 +47,29 @@
             :rowspan="filterColumnList[i].type==='None' ? 2 : 1"
           >
             <div style="display: flex;align-items: center;justify-content: center">
-              <div style="margin-right: 5px;cursor:pointer;display: inline-block;text-align: center" @click="toggleSort(column)" v-if="column.sort">
-                <i class="el-icon-caret-top" style="display: block;margin-bottom: -6px" :class="{'text-blue':searchParams.sortLabel===column.label && searchParams.sortType==='ASC'}"></i>
-                <i class="el-icon-caret-bottom" style="display: block;" :class="{'text-blue':searchParams.sortLabel===column.label && searchParams.sortType==='DESC'}"></i>
+              <div
+                style="margin-right: 5px;cursor:pointer;display: inline-block;text-align: center"
+                @click="toggleSort(column)"
+                v-if="column.sort"
+              >
+                <i
+                  class="el-icon-caret-top"
+                  style="display: block;margin-bottom: -6px"
+                  :class="{'text-blue':searchParams.sortLabel===column.label && searchParams.sortType==='ASC'}"
+                ></i>
+                <i
+                  class="el-icon-caret-bottom"
+                  style="display: block;"
+                  :class="{'text-blue':searchParams.sortLabel===column.label && searchParams.sortType==='DESC'}"
+                ></i>
               </div>
               <span>{{column.label}}</span>
               <el-tooltip
-                      v-if="column.description"
-                      effect="dark"
-                      placement="bottom"
-                      :content="column.description"
-                      style="margin-left: 5px"
+                v-if="column.description"
+                effect="dark"
+                placement="bottom"
+                :content="column.description"
+                style="margin-left: 5px"
               >
                 <i class="el-icon-question"></i>
               </el-tooltip>
@@ -98,7 +111,12 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(row,i) in displayList" :key="row[option.rowKey]" @click="clickOnRow(row,i)" :class="getRowClassNames(row)">
+        <tr
+          v-for="(row,i) in displayList"
+          :key="row[option.rowKey]"
+          @click="clickOnRow(row,i)"
+          :class="getRowClassNames(row)"
+        >
           <td v-if="option.checkbox" width="60px">
             <el-checkbox
               :checked="isInSelectedList(row)"
@@ -142,27 +160,26 @@
         <tr v-if="hasSumUp && filterList.length>0">
           <td v-if="option.checkbox" width="60px"></td>
           <td
-                  v-for="(column,i) in displayColumns"
-                  :key="column.label"
-                  :rowspan="filterColumnList[i].type==='None' ? 2 : 1"
+            v-for="(column,i) in displayColumns"
+            :key="column.label"
+            :rowspan="filterColumnList[i].type==='None' ? 2 : 1"
           >
             <span v-if="column.sumUp">
               <span v-if="!option.disablePagination">
-                本页总和: {{getColumnSumUp(displayList,column)}} <br>
+                本页总和: {{getColumnSumUp(displayList,column)}}
+                <br />
                 所有页总和: {{getColumnSumUp(filterList,column)}}
               </span>
-              <span v-else>
-                总和: {{getColumnSumUp(filterList,column)}}
-              </span>
+              <span v-else>总和: {{getColumnSumUp(filterList,column)}}</span>
             </span>
           </td>
         </tr>
       </tbody>
     </table>
-    <slot name="no-data" v-if="displayList.length===0" >
+    <slot name="no-data" v-if="displayList.length===0">
       <div class="no-data">
         <div style="text-align: center">
-          <img src="../assets/no-data.jpg" alt="">
+          <img src="../assets/no-data.jpg" alt />
           <div style="color: #b3bdc6">暂无数据</div>
         </div>
       </div>
@@ -222,19 +239,19 @@ export default class Geelist extends Vue {
     keyword: "",
     currentPage: 1,
     pageSize: this.option.pageSize || 10,
-    sortType:'',
-    sortLabel:''
+    sortType: "",
+    sortLabel: ""
   };
 
   mySelectedList = this.selectedList || [];
 
   displayLabelList: string[] = [];
 
-  get hasSumUp(){
-    for(const option of this.option.columnOptions){
-      if(option.sumUp) return true;
+  get hasSumUp() {
+    for (const option of this.option.columnOptions) {
+      if (option.sumUp) return true;
     }
-    return false
+    return false;
   }
 
   @Watch("selectedList", { deep: true })
@@ -269,13 +286,13 @@ export default class Geelist extends Vue {
     return res || 1;
   }
 
-  getColumnSumUp(list:any[],column:GeelistColumnOption<any>){
+  getColumnSumUp(list: any[], column: GeelistColumnOption<any>) {
     let ans = 0;
-    list.forEach(row=>{
-      if(column.sumUp){
+    list.forEach(row => {
+      if (column.sumUp) {
         ans += column.sumUp(row);
       }
-    })
+    });
     return ans.toFixed(2);
   }
 
@@ -348,19 +365,24 @@ export default class Geelist extends Vue {
     else return actionOption[XXX];
   }
 
-  getColumnClassNames(row:any,columnOption: GeelistColumnOption<any>){
+  getColumnClassNames(row: any, columnOption: GeelistColumnOption<any>) {
     const list = [];
-    if(this.getRowspan(row,columnOption)===0 || this.getColspan(row,columnOption)===0){
-      list.push('displayNone')
+    if (
+      this.getRowspan(row, columnOption) === 0 ||
+      this.getColspan(row, columnOption) === 0
+    ) {
+      list.push("displayNone");
     }
-    if(!columnOption.classNames) return list;
-    if(typeof columnOption.classNames === "function") return list.concat(columnOption.classNames(row));
+    if (!columnOption.classNames) return list;
+    if (typeof columnOption.classNames === "function")
+      return list.concat(columnOption.classNames(row));
     return list.concat(columnOption.classNames);
   }
 
-  getRowClassNames(row:any){
-    if(!this.option.classNames) return [];
-    if(typeof this.option.classNames === "function") return this.option.classNames(row);
+  getRowClassNames(row: any) {
+    if (!this.option.classNames) return [];
+    if (typeof this.option.classNames === "function")
+      return this.option.classNames(row);
     return this.option.classNames;
   }
 
@@ -447,14 +469,16 @@ export default class Geelist extends Vue {
     );
   }
 
-  toggleSort(column:GeelistColumnOption<any>){
-    if(this.searchParams.sortLabel === column.label){
-      if(this.searchParams.sortType === '') this.searchParams.sortType = 'ASC';
-      else if(this.searchParams.sortType === 'ASC') this.searchParams.sortType = 'DESC';
-      else if(this.searchParams.sortType === 'DESC') this.searchParams.sortType = '';
-    }else{
+  toggleSort(column: GeelistColumnOption<any>) {
+    if (this.searchParams.sortLabel === column.label) {
+      if (this.searchParams.sortType === "") this.searchParams.sortType = "ASC";
+      else if (this.searchParams.sortType === "ASC")
+        this.searchParams.sortType = "DESC";
+      else if (this.searchParams.sortType === "DESC")
+        this.searchParams.sortType = "";
+    } else {
       this.searchParams.sortLabel = column.label;
-      this.searchParams.sortType = 'ASC';
+      this.searchParams.sortType = "ASC";
     }
   }
 
@@ -484,8 +508,7 @@ export default class Geelist extends Vue {
             try {
               if (this.getContent(row, column).includes(keyword))
                 keywordFound = true;
-            } catch (e) {
-            }
+            } catch (e) {}
           }
         }
         if (keyword && !keywordFound) return false;
@@ -494,7 +517,9 @@ export default class Geelist extends Vue {
       .filter(row => {
         for (let i = 0; i < this.displayColumns.length; i++) {
           const column = this.displayColumns[i];
-          const filterColumn = this.filterColumnList[this.getOriginColumnIndex(column)];
+          const filterColumn = this.filterColumnList[
+            this.getOriginColumnIndex(column)
+          ];
 
           if (filterColumn.type === "Input" && filterColumn.value) {
             if (!this.getContent(row, column).includes(filterColumn.value))
@@ -514,31 +539,39 @@ export default class Geelist extends Vue {
 
   get displayList(): any[] {
     let displayList = JSON.parse(JSON.stringify(this.filterList));
-    const existSortColumn = this.option.columnOptions.find(c=>c.label===this.searchParams.sortLabel);
-    if(existSortColumn && existSortColumn.sort && this.searchParams.sortType){
+    const existSortColumn = this.option.columnOptions.find(
+      c => c.label === this.searchParams.sortLabel
+    );
+    if (existSortColumn && existSortColumn.sort && this.searchParams.sortType) {
       const sortRule = existSortColumn.sort;
-      if(typeof sortRule === 'function'){
-        if(this.searchParams.sortType === 'ASC') displayList = displayList.sort((a:any,b:any)=> sortRule(a,b));
-        if(this.searchParams.sortType === 'DESC') displayList = displayList.sort((a:any,b:any)=> sortRule(b,a));
-      }else{
-        if(this.searchParams.sortType === 'ASC') displayList = displayList.sort((a:any,b:any)=>{
-          const contentA = this.getContent(a,existSortColumn);
-          const contentB = this.getContent(b,existSortColumn);
-          if(isNaN(parseFloat(contentA))) return contentA.localeCompare(contentB);
-          else return parseFloat(contentA) - parseFloat(contentB);
-        });
-        if(this.searchParams.sortType === 'DESC') displayList = displayList.sort((a:any,b:any)=>{
-          const contentA = this.getContent(a,existSortColumn);
-          const contentB = this.getContent(b,existSortColumn);
-          if(isNaN(parseFloat(contentA))) return contentB.localeCompare(contentA);
-          else return parseFloat(contentB) - parseFloat(contentA);
-        });
+      if (typeof sortRule === "function") {
+        if (this.searchParams.sortType === "ASC")
+          displayList = displayList.sort((a: any, b: any) => sortRule(a, b));
+        if (this.searchParams.sortType === "DESC")
+          displayList = displayList.sort((a: any, b: any) => sortRule(b, a));
+      } else {
+        if (this.searchParams.sortType === "ASC")
+          displayList = displayList.sort((a: any, b: any) => {
+            const contentA = this.getContent(a, existSortColumn);
+            const contentB = this.getContent(b, existSortColumn);
+            if (isNaN(parseFloat(contentA)))
+              return contentA.localeCompare(contentB);
+            else return parseFloat(contentA) - parseFloat(contentB);
+          });
+        if (this.searchParams.sortType === "DESC")
+          displayList = displayList.sort((a: any, b: any) => {
+            const contentA = this.getContent(a, existSortColumn);
+            const contentB = this.getContent(b, existSortColumn);
+            if (isNaN(parseFloat(contentA)))
+              return contentB.localeCompare(contentA);
+            else return parseFloat(contentB) - parseFloat(contentA);
+          });
       }
     }
-    const finalList:any = [];
+    const finalList: any = [];
     const rowKey = this.option.rowKey;
-    displayList.forEach((item:any)=>{
-      finalList.push(this.filterList.find(i=>i[rowKey]===item[rowKey]));
+    displayList.forEach((item: any) => {
+      finalList.push(this.filterList.find(i => i[rowKey] === item[rowKey]));
     });
     if (this.option.disablePagination) return finalList;
     const start =
@@ -553,8 +586,8 @@ export default class Geelist extends Vue {
     });
   }
 
-  getOriginColumnIndex(column: GeelistColumnOption<any>){
-    return this.option.columnOptions.findIndex(c=>c.label===column.label);
+  getOriginColumnIndex(column: GeelistColumnOption<any>) {
+    return this.option.columnOptions.findIndex(c => c.label === column.label);
   }
 
   initOption() {
@@ -721,10 +754,13 @@ export default class Geelist extends Vue {
     display: none;
   }
 }
-  .no-data{
-    background: white;height: 300px;display: flex;justify-content: center;align-items: center;
-    border: 1px solid #e8e8e8;
-    color: rgba(0, 0, 0, 0.5);
-
-  }
+.no-data {
+  background: white;
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #e8e8e8;
+  color: rgba(0, 0, 0, 0.5);
+}
 </style>
