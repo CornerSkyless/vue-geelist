@@ -978,8 +978,8 @@ export default class App extends Vue {
     rowKey: "id",
     // pageSize: 100,
     // pageSizes: [5, 10, 20, 100],
-    // exportExcel: "data",
-    hideHeader:true,
+    exportExcel: "data",
+    // hideHeader:true,
     checkbox: true,
     disablePagination:true,
     columnOptions: [

@@ -206,7 +206,7 @@ import {
   GeelistActionOption,
   GeelistFilterColumn
 } from "./interface";
-const CsvExportor = require("csv-exportor");
+const  CsvExportor = require("csv-exportor");
 function IndexByIndex(obj: any, indexes = ""): string | boolean | number {
   let levels = indexes.split(".");
   if (levels.length === 0) return "";

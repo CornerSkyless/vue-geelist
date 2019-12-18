@@ -1833,6 +1833,7 @@ combined-stream@~1.0.5, combined-stream@~1.0.6:
 comma-separated-values@^3.6.4:
   version "3.6.4"
   resolved "https://registry.yarnpkg.com/comma-separated-values/-/comma-separated-values-3.6.4.tgz#c309ec7024f74b7ae19223372054242617e35bd2"
+  integrity sha1-wwnscCT3S3rhkiM3IFQkJhfjW9I=
 
 commander@2.17.x, commander@~2.17.1:
   version "2.17.1"
@@ -2209,9 +2210,9 @@ csso@^3.5.0:
   dependencies:
     css-tree "1.0.0-alpha.29"
 
-csv-exportor@^1.0.2:
+"csv-exportor@https://github.com/CornerSkyless/csv-exportor":
   version "1.0.2"
-  resolved "https://registry.yarnpkg.com/csv-exportor/-/csv-exportor-1.0.2.tgz#c72d8e8abcd32b240060e1b2149114f3e8d6caf7"
+  resolved "https://github.com/CornerSkyless/csv-exportor#900905fbd3f245b67e2886a24bafdc93bf3c51de"
   dependencies:
     comma-separated-values "^3.6.4"
 
