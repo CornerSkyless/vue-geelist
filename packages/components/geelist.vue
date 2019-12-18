@@ -636,12 +636,13 @@ export default class Geelist extends Vue {
 
   initOption() {
     this.displayLabelList = [];
+    const filterValues = this.filterValues || this.filterColumnList;
     this.filterColumnList = this.option.columnOptions.map(
       (column): GeelistFilterColumn => {
         let defaultValue = "";
         let defaultValues:string[] = [];
-        if(this.filterValues){
-          const existValue = this.filterValues.find(i=>i.label===column.label);
+        if(filterValues){
+          const existValue = filterValues.find(i=>i.label===column.label);
           if(existValue){
             defaultValue = existValue.value;
             defaultValues = existValue.values;
