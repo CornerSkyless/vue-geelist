@@ -1,11 +1,12 @@
 <template>
   <div id="app">
-    {{selectedList.map(i=>i.id)}}
+    {{filterValues}}
     <geelist
       :list="list"
       :option="option"
       @message="message"
       :selectedList.sync="selectedList"
+      :filterValues.sync="filterValues"
       @row-click="rowOnClick"
     >
       <template slot="header-end">dsad</template>
@@ -969,11 +970,12 @@ export default class App extends Vue {
       isAllowedEdit: false,
       isAllowedResubmit: false
     }
-  ].map(item => {
-    if(item.id%2==0) return new ExampleA((item));
-    else return new ExampleB((item))
-  });
+  ];
   selectedList = [];
+  filterValues=[{
+    label:'编号',
+    value:881
+  }];
   option: GeelistOption<any> = {
     rowKey: "id",
     // pageSize: 100,
@@ -1052,7 +1054,6 @@ export default class App extends Vue {
         label: "头像",
         description: "这是插槽的使用方法",
         content:(row) => {
-          console.log(row);
           return 'wadaw'
         },
         style: {

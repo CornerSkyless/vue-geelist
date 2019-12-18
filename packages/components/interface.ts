@@ -68,4 +68,11 @@ export interface GeelistFilterColumn {
   value: string
   values: string[]
   selectOptions: string[]
+  label: string
+}
+
+export interface GeelistFilterValues {
+  value: string
+  values: string[]
+  label: string
 }

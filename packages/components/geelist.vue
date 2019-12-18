@@ -214,7 +214,7 @@ import {
   GeelistOption,
   GeelistTagOption,
   GeelistActionOption,
-  GeelistFilterColumn
+  GeelistFilterColumn, GeelistFilterValues
 } from "./interface";
 import moment from "moment";
 const  CsvExportor = require("csv-exportor");
@@ -244,7 +244,17 @@ export default class Geelist extends Vue {
   @Prop({ type: Array })
   private selectedList!: any[];
 
+  @Prop({type: Array})
+  private filterValues!: GeelistFilterValues[];
+
   private filterColumnList: GeelistFilterColumn[] = [];
+
+  @Watch('filterColumnList',{deep:true})
+  onFilterColumnListChange(){
+    this.$emit("update:filterValues", this.filterColumnList.map<GeelistFilterValues>(filterColumn=>({
+      label:filterColumn.label,value:filterColumn.value,values:filterColumn.values
+    })));
+  }
 
   searchParams = {
     keyword: "",
@@ -270,6 +280,11 @@ export default class Geelist extends Vue {
     this.mySelectedList = value;
   }
 
+  @Watch("filterValues", { deep: true })
+  filterValuesHandler(valuesList: GeelistFilterValues[]) {
+    this.updateFilterColumn(valuesList);
+  }
+
   @Watch("mySelectedList", { deep: true })
   mySelectedListHandler() {
     this.$emit("update:selectedList", this.mySelectedList);
@@ -283,6 +298,16 @@ export default class Geelist extends Vue {
   @Watch("list", { deep: true })
   listHandler() {
     this.initOption();
+  }
+
+  updateFilterColumn(propFilterList: GeelistFilterValues[]){
+    propFilterList.forEach(prop=>{
+      const exist = this.filterColumnList.find(i=>i.label===prop.label);
+      if(exist) {
+        exist.values = prop.values;
+        exist.value = prop.value;
+      }
+    })
   }
 
   getRowspan(row: any, column: GeelistColumnOption<any>) {
@@ -613,41 +638,30 @@ export default class Geelist extends Vue {
     this.displayLabelList = [];
     this.filterColumnList = this.option.columnOptions.map(
       (column): GeelistFilterColumn => {
+        let defaultValue = "";
+        let defaultValues:string[] = [];
+        if(this.filterValues){
+          const existValue = this.filterValues.find(i=>i.label===column.label);
+          if(existValue){
+            defaultValue = existValue.value;
+            defaultValues = existValue.values;
+          }
+        }
         if (!column.defaultHide) this.displayLabelList.push(column.label);
         if (column.input)
-          return {
-            type: "Input",
-            value: "",
-            values: [],
-            selectOptions: []
-          };
+          return { type: "Input", value:defaultValue, values: defaultValues, selectOptions: [], label:column.label };
         if (column.select) {
           const selectOptions: string[] = [];
           this.list.forEach(row => {
             const content = this.getContent(row, column);
             if (!selectOptions.includes(content)) selectOptions.push(content);
           });
-          return {
-            type: "Select",
-            value: "",
-            values: [],
-            selectOptions
-          };
+          return {type: "Select", value:defaultValue, values: defaultValues, selectOptions, label: column.label};
         }
         if (column.dateFilter) {
-          return {
-            type: column.dateFilter,
-            value: "",
-            values: [],
-            selectOptions: []
-          };
+          return {type: column.dateFilter, value:defaultValue, values: defaultValues, selectOptions: [],label: column.label};
         }
-        return {
-          type: "None",
-          value: "",
-          values: [],
-          selectOptions: []
-        };
+        return {type: "None", value:defaultValue, values: defaultValues, selectOptions: [],label:column.label};
       }
     );
   }
