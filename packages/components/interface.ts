@@ -53,12 +53,16 @@ export interface GeelistColumnOption<T> {
   actions?: GeelistActionOption<T>[]
   input?: boolean
   select?: boolean
+  dateFilter?:GeelistFilterDateColumnType,
   defaultHide?: boolean
   rowspan?: string
   colspan?: string,
   sort?: ((a: T,b: T) => number) | boolean // 自定义文字内容
 }
-type GeelistFilterColumnType = "None" | "Input" | "Select"
+type GeelistFilterColumnType = "None" | "Input" | "Select" | GeelistFilterDateColumnType;
+
+type GeelistFilterDateColumnType = "Date" | "DateRange" | "Datetime" | "DatetimeRange";
+
 export interface GeelistFilterColumn {
   type: GeelistFilterColumnType
   value: string

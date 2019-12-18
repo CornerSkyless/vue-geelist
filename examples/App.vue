@@ -1044,6 +1044,11 @@ export default class App extends Vue {
         emptyText: "自定义空值"
       },
       {
+        label: "注册时间",
+        content: "createdAt",
+        dateFilter:'DateRange'
+      },
+      {
         label: "头像",
         description: "这是插槽的使用方法",
         content:(row) => {
@@ -1090,7 +1095,7 @@ export default class App extends Vue {
 
 <style lang="scss">
   .bg-blue{
-      background: blue;
+      background: #409eff;
 
   }
 </style>

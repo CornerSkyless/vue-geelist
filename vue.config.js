@@ -18,7 +18,7 @@ module.exports = {
       .loader("babel-loader")
       .tap(options => {
         // 修改它的选项...
-        return options;
-      });
+        return options
+      })
   }
-};
+}

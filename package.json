@@ -1,7 +1,7 @@
 {
   "name": "vue-geelist",
   "description": "A data table for lazy coder based on Element-UI.",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "author": "cornerskyless <573196853@qq.com>",
   "license": "MIT",
   "private": false,
@@ -15,6 +15,7 @@
   "dependencies": {
     "csv-exportor": "https://github.com/CornerSkyless/csv-exportor",
     "element-ui": "^2.11.1",
+    "moment": "^2.24.0",
     "vue": "^2.5.17",
     "vue-class-component": "^6.0.0",
     "vue-property-decorator": "^7.0.0"

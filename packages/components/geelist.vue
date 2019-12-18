@@ -84,27 +84,37 @@
               v-model="filterColumnList[getOriginColumnIndex(column)].value"
               placeholder="检索"
             ></el-input>
+            <el-date-picker
+                    size="mini" style="width: 100%;"
+                    v-if="filterColumnList[getOriginColumnIndex(column)].type==='Date' || filterColumnList[getOriginColumnIndex(column)].type==='Datetime'"
+                    v-model="filterColumnList[getOriginColumnIndex(column)].value"
+                    :type="filterColumnList[getOriginColumnIndex(column)].type.toLowerCase()"
+                    placeholder="筛选">
+            </el-date-picker>
             <el-popover
-              v-if="filterColumnList[getOriginColumnIndex(column)].type==='Select'"
-              placement="bottom"
-              width="240"
-              trigger="click"
-            >
+                    v-if="filterColumnList[getOriginColumnIndex(column)].type==='DateRange' || filterColumnList[getOriginColumnIndex(column)].type==='DatetimeRange'"                    placement="bottom"
+                    width="270" trigger="click">
+              <div style="display: flex;">
+                <el-date-picker
+                        size="mini" style="width: 100%;"
+                        v-model="filterColumnList[getOriginColumnIndex(column)].values"
+                        :type="filterColumnList[getOriginColumnIndex(column)].type.toLowerCase()"
+                        :clearable="false" placeholder="筛选">
+                </el-date-picker>
+                <el-button size="mini" @click="filterColumnList[getOriginColumnIndex(column)].values=[]" c>清空</el-button>
+              </div>
+              <a slot="reference" class="select-span" :class="{'text-blue':filterColumnList[getOriginColumnIndex(column)].values.length>0}">
+                <i class="el-icon-date" style="margin-right: 5px"></i>时间范围筛选
+              </a>
+            </el-popover>
+            <el-popover v-if="filterColumnList[getOriginColumnIndex(column)].type==='Select'" placement="bottom" width="240" trigger="click">
               <el-checkbox-group v-model="filterColumnList[getOriginColumnIndex(column)].values">
-                <el-checkbox
-                  v-for="option in filterColumnList[getOriginColumnIndex(column)].selectOptions"
-                  :key="option"
-                  :label="option"
-                  style="margin-left:0;margin-right:15px"
-                ></el-checkbox>
+                <el-checkbox v-for="option in filterColumnList[getOriginColumnIndex(column)].selectOptions"
+                  :key="option" :label="option" style="margin-left:0;margin-right:15px" />
               </el-checkbox-group>
-              <a
-                slot="reference"
-                class="select-span"
-                :class="{'text-blue':filterColumnList[getOriginColumnIndex(column)].values.length>0}"
-              >
-                <i class="el-icon-caret-bottom"></i>
-                筛选
+              <a slot="reference" class="select-span"
+                :class="{'text-blue':filterColumnList[getOriginColumnIndex(column)].values.length>0}">
+                <i class="el-icon-caret-bottom"></i>筛选
               </a>
             </el-popover>
           </th>
@@ -206,6 +216,7 @@ import {
   GeelistActionOption,
   GeelistFilterColumn
 } from "./interface";
+import moment from "moment";
 const  CsvExportor = require("csv-exportor");
 function IndexByIndex(obj: any, indexes = ""): string | boolean | number {
   let levels = indexes.split(".");
@@ -520,17 +531,25 @@ export default class Geelist extends Vue {
           const filterColumn = this.filterColumnList[
             this.getOriginColumnIndex(column)
           ];
-
+          const content = this.getContent(row, column);
           if (filterColumn.type === "Input" && filterColumn.value) {
-            if (!this.getContent(row, column).includes(filterColumn.value))
-              return false;
-          }
-          if (
-            filterColumn.type === "Select" &&
-            filterColumn.values.length > 0
-          ) {
-            if (!filterColumn.values.includes(this.getContent(row, column)))
-              return false;
+            if (!content.includes(filterColumn.value)) return false;
+          }else if (filterColumn.type === "Select" && filterColumn.values.length > 0) {
+            if (!filterColumn.values.includes(content)) return false;
+          }else if (filterColumn.type === "Date" && filterColumn.value) {
+            if (moment(content).format('YYYY-MM-DD') !== moment(filterColumn.value).format('YYYY-MM-DD')) return false;
+          } else if (filterColumn.type === "Datetime" && filterColumn.value) {
+            if (moment(content).format('YYYY-MM-DD hh:mm:ss') !== moment(filterColumn.value).format('YYYY-MM-DD hh:mm:ss')) return false;
+          }else if (filterColumn.type === "DateRange" && filterColumn.values.length>0) {
+            const contentMoment = moment(content);
+            const leftMoment = moment(filterColumn.values[0]);
+            const rightMoment = moment(filterColumn.values[1]);
+            if (contentMoment.diff(leftMoment,'days')<0 || contentMoment.diff(rightMoment,'days')>0) return false;
+          }else if (filterColumn.type === "DatetimeRange" && filterColumn.values.length>0) {
+            const contentMoment = moment(content);
+            const leftMoment = moment(filterColumn.values[0]);
+            const rightMoment = moment(filterColumn.values[1]);
+            if (contentMoment.diff(leftMoment,'seconds')<0 || contentMoment.diff(rightMoment,'seconds')>0) return false;
           }
         }
         return true;
@@ -613,6 +632,14 @@ export default class Geelist extends Vue {
             value: "",
             values: [],
             selectOptions
+          };
+        }
+        if (column.dateFilter) {
+          return {
+            type: column.dateFilter,
+            value: "",
+            values: [],
+            selectOptions: []
           };
         }
         return {
