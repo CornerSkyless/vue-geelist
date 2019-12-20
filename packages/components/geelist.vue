@@ -104,7 +104,7 @@
                 <el-button size="mini" @click="filterColumnList[getOriginColumnIndex(column)].values=[]" c>清空</el-button>
               </div>
               <a slot="reference" class="select-span" :class="{'text-blue':filterColumnList[getOriginColumnIndex(column)].values.length>0}">
-                <i class="el-icon-date" style="margin-right: 5px"></i>时间范围筛选
+                <i class="el-icon-date" style="margin-right: 5px"></i>范围
               </a>
             </el-popover>
             <el-popover v-if="filterColumnList[getOriginColumnIndex(column)].type==='Select'" placement="bottom" width="240" trigger="click">
@@ -174,14 +174,15 @@
             :key="column.label"
             :rowspan="filterColumnList[i].type==='None' ? 2 : 1"
           >
-            <span v-if="column.sumUp">
+            <span v-if="column.sumUp && !column.sumUpSlot">
               <span v-if="!option.disablePagination">
-                本页总和: {{getColumnSumUp(displayList,column)}}
-                <br />
-                所有页总和: {{getColumnSumUp(filterList,column)}}
+                本页总和 <br> {{getColumnSumUp(displayList,column)}}
+                <br/>
+                所有页总和 <br> {{getColumnSumUp(filterList,column)}}
               </span>
-              <span v-else>总和: {{getColumnSumUp(filterList,column)}}</span>
+              <span v-else>总和 <br> {{getColumnSumUp(filterList,column)}}</span>
             </span>
+            <slot v-if="column.sumUp && column.sumUpSlot" :name="column.sumUpSlot" :pageSumUp="getColumnSumUp(displayList,column)" :totalSumUp="getColumnSumUp(filterList,column)"></slot>
           </td>
         </tr>
       </tbody>

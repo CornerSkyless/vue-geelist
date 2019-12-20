@@ -58,6 +58,7 @@ export interface GeelistColumnOption<T> {
   rowspan?: string
   colspan?: string,
   sort?: ((a: T,b: T) => number) | boolean // 自定义文字内容
+  sumUpSlot?:string
 }
 type GeelistFilterColumnType = "None" | "Input" | "Select" | GeelistFilterDateColumnType;
 

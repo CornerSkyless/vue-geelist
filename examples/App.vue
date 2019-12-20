@@ -13,6 +13,7 @@
       <template slot-scope="scope" slot="avatar">
         <img :src="scope.row.uploader.avatarUrl" style="width:20px;height:20px">
       </template>
+      <template slot="idSumUp" slot-scope="scope">{{scope.pageSumUp}}</template>
     </geelist>
   </div>
 </template>
@@ -988,9 +989,13 @@ export default class App extends Vue {
       { label: "编号", content: "id",
         sort(a,b){
           return a.id - b.id;
-        }, input: true ,sumUp(row:any){
-        return row.id
-        }},
+        },
+        input: true,
+        sumUp(row:any){
+          return row.id
+        },
+        sumUpSlot:'idSumUp'
+      },
       {
         label: "编辑认证",
         content: "isCertificate",
