@@ -110,7 +110,7 @@
               :type="getTagOption(row,column).type"
               :color="getTagOption(row,column).color"
             >{{getContent(row,column)}}</el-tag>
-            <slot v-if="column.slot" :name="column.slot" :row="row"></slot>
+            <slot v-if="column.slot" :name="column.slot" :row="row" :content="getContent(row,column)"></slot>
             <el-button
               v-for="action in column.actions || []"
               :key="getActionXXX(row,action,'text')"
