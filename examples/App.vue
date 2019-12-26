@@ -21,16 +21,6 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { GeelistOption } from "../packages/components/interface";
-class ExampleA{
-  constructor(source:any){
-    Object.assign(this,source);
-  }
-}
-class ExampleB{
-  constructor(source:any){
-    Object.assign(this,source);
-  }
-}
 
 @Component({
   components: {}
@@ -979,6 +969,7 @@ export default class App extends Vue {
   }];
   option: GeelistOption<any> = {
     rowKey: "id",
+    cacheKey:'UserList',
     // pageSize: 100,
     // pageSizes: [5, 10, 20, 100],
     exportExcel: "data",

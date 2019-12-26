@@ -2,30 +2,13 @@
   <div class="geelist-component">
     <div class="geelist-header" v-if="!option.hideHeader">
       <div>
-        <span
-          v-if="mySelectedList.length>0 && option.checkbox"
-          style="margin-right:10px"
-        >已选中 {{mySelectedList.length}}/{{list.length}}</span>
-        <el-input
-          v-if="!option.disableGlobalSearch"
-          size="mini"
-          style="width:250px"
-          v-model="searchParams.keyword"
-          placeholder="输入关键词搜索"
-        ></el-input>
+        <span v-if="mySelectedList.length>0 && option.checkbox" style="margin-right:10px">已选中 {{mySelectedList.length}}/{{list.length}}</span>
+        <el-input v-if="!option.disableGlobalSearch" size="mini" style="width:250px" v-model="searchParams.keyword" placeholder="输入关键词搜索"/>
         <el-popover placement="bottom" width="250" trigger="click" style="margin-left:10px">
           <el-checkbox-group v-model="displayLabelList">
-            <el-checkbox
-              v-for="col in option.columnOptions"
-              :label="col.label"
-              :key="col.label"
-              style="margin-left:0;margin-right:10px"
-            >{{col.label}}</el-checkbox>
+            <el-checkbox v-for="col in option.columnOptions" :label="col.label" :key="col.label" style="margin-left:0;margin-right:10px">{{col.label}}</el-checkbox>
           </el-checkbox-group>
-          <el-button type="text" slot="reference">
-            调整可见列
-            <i class="el-icon-caret-bottom"></i>
-          </el-button>
+          <el-button type="text" slot="reference">调整可见列<i class="el-icon-caret-bottom"/></el-button>
         </el-popover>
       </div>
       <div style="display: flex;align-items: center">
@@ -36,42 +19,18 @@
     <table class="geelist-table">
       <thead>
         <tr>
-          <th v-if="option.checkbox" rowspan="2" width="60px">
-            <el-checkbox :indeterminate="isIndeterminate" @change="handleCheckAllChange" />
-          </th>
-
-          <th
-            v-for="(column,i) in displayColumns"
-            :key="column.label"
-            :style="column.style"
-            :rowspan="filterColumnList[i].type==='None' ? 2 : 1"
-          >
+          <th v-if="option.checkbox" rowspan="2" width="60px"><el-checkbox :indeterminate="isIndeterminate" @change="handleCheckAllChange" /></th>
+          <th v-for="(column,i) in displayColumns" :key="column.label" :style="column.style" :rowspan="filterColumnList[i].type==='None' ? 2 : 1">
             <div style="display: flex;align-items: center;justify-content: center">
-              <div
-                style="margin-right: 5px;cursor:pointer;display: inline-block;text-align: center"
-                @click="toggleSort(column)"
-                v-if="column.sort"
-              >
-                <i
-                  class="el-icon-caret-top"
-                  style="display: block;margin-bottom: -6px"
-                  :class="{'text-blue':searchParams.sortLabel===column.label && searchParams.sortType==='ASC'}"
-                ></i>
-                <i
-                  class="el-icon-caret-bottom"
-                  style="display: block;"
-                  :class="{'text-blue':searchParams.sortLabel===column.label && searchParams.sortType==='DESC'}"
-                ></i>
+              <div style="margin-right: 5px;cursor:pointer;display: inline-block;text-align: center" @click="toggleSort(column)" v-if="column.sort">
+                <i class="el-icon-caret-top" style="display: block;margin-bottom: -6px"
+                   :class="{'text-blue':searchParams.sortLabel===column.label && searchParams.sortType==='ASC'}"/>
+                <i class="el-icon-caret-bottom" style="display: block;"
+                  :class="{'text-blue':searchParams.sortLabel===column.label && searchParams.sortType==='DESC'}"/>
               </div>
               <span>{{column.label}}</span>
-              <el-tooltip
-                v-if="column.description"
-                effect="dark"
-                placement="bottom"
-                :content="column.description"
-                style="margin-left: 5px"
-              >
-                <i class="el-icon-question"></i>
+              <el-tooltip v-if="column.description" effect="dark" placement="bottom" :content="column.description" style="margin-left: 5px">
+                <i class="el-icon-question"/>
               </el-tooltip>
             </div>
           </th>
@@ -281,6 +240,17 @@ export default class Geelist extends Vue {
     this.mySelectedList = value;
   }
 
+  @Watch("displayLabelList",{deep:true})
+  displayLabelListHandler(value:string[]){
+    if(this.option.cacheKey){
+      localStorage.setItem(this.option.cacheKey,JSON.stringify({
+        displayLabelList:value,
+        labelList:this.option.columnOptions.map(i=>i.label)
+      }))
+    }
+  }
+
+
   @Watch("filterValues", { deep: true })
   filterValuesHandler(valuesList: GeelistFilterValues[]) {
     this.updateFilterColumn(valuesList);
@@ -293,12 +263,12 @@ export default class Geelist extends Vue {
 
   @Watch("option", { deep: true })
   optionHandler() {
-    this.initOption();
+    this.initOption({refreshDisplayLabelList:true});
   }
 
   @Watch("list", { deep: true })
   listHandler() {
-    this.initOption();
+    this.initOption({refreshDisplayLabelList:false});
   }
 
   updateFilterColumn(propFilterList: GeelistFilterValues[]){
@@ -548,8 +518,7 @@ export default class Geelist extends Vue {
             } catch (e) {}
           }
         }
-        if (keyword && !keywordFound) return false;
-        return true;
+        return !(keyword && !keywordFound);
       })
       .filter(row => {
         for (let i = 0; i < this.displayColumns.length; i++) {
@@ -635,8 +604,10 @@ export default class Geelist extends Vue {
     return this.option.columnOptions.findIndex(c => c.label === column.label);
   }
 
-  initOption() {
-    this.displayLabelList = [];
+  initOption(config:{refreshDisplayLabelList?:boolean}) {
+    // 如果强制刷新可见列的话，需要初始化
+    if(config.refreshDisplayLabelList) this.displayLabelList = [];
+
     const filterValues = this.filterValues || this.filterColumnList;
     this.filterColumnList = this.option.columnOptions.map(
       (column): GeelistFilterColumn => {
@@ -649,7 +620,7 @@ export default class Geelist extends Vue {
             defaultValues = existValue.values;
           }
         }
-        if (!column.defaultHide) this.displayLabelList.push(column.label);
+        if (config.refreshDisplayLabelList && !column.defaultHide) this.displayLabelList.push(column.label);
         if (column.input)
           return { type: "Input", value:defaultValue, values: defaultValues, selectOptions: [], label:column.label };
         if (column.select) {
@@ -669,7 +640,20 @@ export default class Geelist extends Vue {
   }
 
   created() {
-    this.initOption();
+    if(this.option.cacheKey){
+      const cache = localStorage.getItem(this.option.cacheKey);
+      if(cache){
+        try{
+          const {displayLabelList,labelList} = JSON.parse(cache);
+          if(labelList.join(',') === this.option.columnOptions.map(i=>i.label).join(',')){
+            this.displayLabelList = displayLabelList;
+            this.initOption({refreshDisplayLabelList:false});
+            return;
+          }
+        }catch (e) {}
+      }
+    }
+    this.initOption({refreshDisplayLabelList:true});
   }
 }
 </script>

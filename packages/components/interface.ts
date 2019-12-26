@@ -11,6 +11,7 @@ export interface GeelistOption<T> {
   disablePagination?: boolean
   checkbox?: boolean,
   classNames?: ((row: T) => string[]) | string[] // 自定义背景
+  cacheKey?:string; //缓存键
 }
 
 export interface GeelistTagOption {
